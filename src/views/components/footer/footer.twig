@@ -6,13 +6,13 @@
 					<h3>{{store.name}}</h3>
 				</a>
 				{% if store.description %}
-					<div class="max-w-sm leading-6 mb-6">
+					<p class="max-w-sm leading-6 mb-6">
 						{{ store.description|raw }}
-          </div>
+					</p>
 				{% endif %}
 
 				<div class="hidden lg:block">
-					<salla-social class="block mb-6"></salla-social>
+					<salla-social class="mb-6"></salla-social>
 				</div>
 
           {# vat #}
@@ -66,4 +66,4 @@
 	</div>
 </div>
 
-<span class="hidden bottom-2 rtl:pl-24 ltr:pr-24 md:grid-cols-3 opacity-40"></span></footer>
+<span class="hidden bottom-2 rtl:pl-24 ltr:pr-24 md:grid-cols-3"></span></footer>
