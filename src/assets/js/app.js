@@ -18,6 +18,7 @@ class App extends AppHelpers {
       this.initiateStickyMenu();
     }
     this.initAddToCart();
+    this.initiateAdAlert();
     this.initiateDropdowns();
     this.initiateModals();
     this.initiateCollapse();
@@ -121,7 +122,7 @@ isElementLoaded(selector){
         toast: true,
         position: salla.config.get('theme.is_rtl') ? 'top-start' : 'top-end',
         showConfirmButton: false,
-        timer: 2000,
+        timer: 3500,
         didOpen: (toast) => {
           toast.addEventListener('mouseenter', Swal.stopTimer)
           toast.addEventListener('mouseleave', Swal.resumeTimer)
@@ -200,6 +201,35 @@ isElementLoaded(selector){
     header.style.height = height + 'px';
   }
 
+  /**
+   * Because salla caches the response, it's important to keep the alert disabled if the visitor closed it.
+   * by store the status of the ad in local storage `salla.storage.set(...)`
+   */
+  initiateAdAlert() {
+    let ad = this.element(".salla-advertisement");
+
+    if (!ad) {
+      return;
+    }
+
+    if (!salla.storage.get('statusAd-' + ad.dataset.id)) {
+      ad.classList.remove('hidden');
+    }
+
+    this.onClick('.ad-close', function (event) {
+      event.preventDefault();
+      salla.storage.set('statusAd-' + ad.dataset.id, 'dismissed');
+
+      anime({
+        targets: '.salla-advertisement',
+        opacity: [1, 0],
+        duration: 300,
+        height: [ad.clientHeight, 0],
+        easing: 'easeInOutQuad',
+      });
+    });
+  }
+
   initiateDropdowns() {
     this.onClick('.dropdown__trigger', ({ target: btn }) => {
       btn.parentElement.classList.toggle('is-opened');
@@ -259,7 +289,7 @@ isElementLoaded(selector){
 
         const toggleState = (isOpen) => {
           state.isOpen = !isOpen
-          this.toggleElementClassIf([content, trigger], 'is-closed', 'is-opened', () => isOpen);
+          this.toggleElementClassIf(content, 'is-closed', 'is-opened', () => isOpen);
         }
 
         trigger.addEventListener('click', () => {
@@ -291,7 +321,7 @@ isElementLoaded(selector){
    */
   initAddToCart() {
     salla.cart.event.onUpdated(summary => {
-      document.querySelectorAll('[data-cart-total]').forEach(el => el.innerHTML = salla.money(summary.total));
+      document.querySelectorAll('[data-cart-total]').forEach(el => el.innerText = salla.money(summary.total));
       document.querySelectorAll('[data-cart-count]').forEach(el => el.innerText = salla.helpers.number(summary.count));
     });
 
