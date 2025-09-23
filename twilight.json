@@ -1031,3 +1031,14 @@
         "en": "A wide range of features to support your business and provide an exciting shopping experience for your customers"
     }
 }
+{
+  "name": "Winter Snowfall",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_snow",
+      "label": "Enable Snowfall Animation",
+      "default": true
+    }
+  ]
+}
