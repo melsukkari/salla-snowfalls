@@ -1,0 +1,275 @@
+{% extends "layouts.master" %}
+
+{% block content %}
+<!-- Winter Wonderland Home Page -->
+<div class="winter-home-page">
+    
+    <!-- Hero Section with Winter Effects -->
+    <section class="winter-hero" style="background: linear-gradient(135deg, var(--winter-deep-red) 0%, var(--winter-dark-red) 50%, var(--winter-pine-green) 100%); color: var(--winter-snow-white); padding: 4rem 0; text-align: center; position: relative; overflow: hidden;">
+        
+        <!-- Winter Background Pattern -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1; background-image: radial-gradient(circle at 20% 50%, var(--winter-gold) 2px, transparent 2px), radial-gradient(circle at 80% 50%, var(--winter-gold) 1px, transparent 1px); background-size: 100px 100px, 150px 150px;"></div>
+        
+        <div class="container" style="position: relative; z-index: 2;">
+            <h1 style="font-size: 3.5rem; font-weight: 700; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+                🎄 مرحباً بموسم الشتاء السحري
+            </h1>
+            <p style="font-size: 1.25rem; margin-bottom: 2rem; opacity: 0.9;">
+                اكتشف مجموعتنا الشتوية الخاصة مع تأثيرات بصرية مذهلة وتجربة تسوق لا تُنسى ❄️
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="#products" class="winter-btn winter-btn--gold" style="font-size: 1.125rem; padding: 1rem 2rem;">
+                    🛍️ تسوق الآن
+                </a>
+                <a href="#offers" class="winter-btn winter-btn--outline" style="font-size: 1.125rem; padding: 1rem 2rem; border-color: var(--winter-gold); color: var(--winter-gold);">
+                    ✨ العروض الخاصة
+                </a>
+            </div>
+        </div>
+        
+        <!-- Floating Winter Elements -->
+        <div style="position: absolute; top: 20%; left: 10%; animation: winterFloat 6s ease-in-out infinite; font-size: 2rem; opacity: 0.7;">❄️</div>
+        <div style="position: absolute; top: 60%; right: 15%; animation: winterFloat 8s ease-in-out infinite reverse; font-size: 1.5rem; opacity: 0.6;">⭐</div>
+        <div style="position: absolute; bottom: 30%; left: 20%; animation: winterFloat 7s ease-in-out infinite; font-size: 1.8rem; opacity: 0.8;">🎁</div>
+        
+    </section>
+    
+    <!-- Winter Features Section -->
+    <section class="winter-features" style="padding: 4rem 0; background: var(--winter-snow-white);">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 3rem; color: var(--winter-deep-red);">
+                ✨ مميزات ثيم عجائب الشتاء
+            </h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                
+                <!-- Feature 1: Snowfall -->
+                <div class="winter-card" style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">❄️</div>
+                    <h3 style="color: var(--winter-deep-red); margin-bottom: 1rem;">تأثير تساقط الثلج</h3>
+                    <p style="color: var(--winter-dark-green); line-height: 1.6;">
+                        تأثير واقعي لتساقط الثلج باستخدام تقنية Canvas المتطورة مع إمكانية التحكم في الكثافة والسرعة
+                    </p>
+                </div>
+                
+                <!-- Feature 2: Winter Colors -->
+                <div class="winter-card" style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎨</div>
+                    <h3 style="color: var(--winter-deep-red); margin-bottom: 1rem;">ألوان شتوية أنيقة</h3>
+                    <p style="color: var(--winter-dark-green); line-height: 1.6;">
+                        نظام ألوان متكامل بدرجات الأحمر العميق والذهبي والأخضر الصنوبري لإطلالة شتوية مميزة
+                    </p>
+                </div>
+                
+                <!-- Feature 3: Enhanced UX -->
+                <div class="winter-card" style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">✨</div>
+                    <h3 style="color: var(--winter-deep-red); margin-bottom: 1rem;">تجربة مستخدم محسّنة</h3>
+                    <p style="color: var(--winter-dark-green); line-height: 1.6;">
+                        تأثيرات بصرية مبهرة مع تحسينات في الأداء وسهولة الاستخدام على جميع الأجهزة
+                    </p>
+                </div>
+                
+                <!-- Feature 4: Holiday Ribbon -->
+                <div class="winter-card" style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎁</div>
+                    <h3 style="color: var(--winter-deep-red); margin-bottom: 1rem;">شريط العطلات</h3>
+                    <p style="color: var(--winter-dark-green); line-height: 1.6;">
+                        شريط إعلاني أنيق للعروض والإعلانات المهمة مع إمكانية التخصيص الكامل
+                    </p>
+                </div>
+                
+                <!-- Feature 5: Responsive Design -->
+                <div class="winter-card" style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">📱</div>
+                    <h3 style="color: var(--winter-deep-red); margin-bottom: 1rem;">تصميم متجاوب</h3>
+                    <p style="color: var(--winter-dark-green); line-height: 1.6;">
+                        تصميم متجاوب بالكامل يعمل بسلاسة على الهواتف والأجهزة اللوحية وأجهزة سطح المكتب
+                    </p>
+                </div>
+                
+                <!-- Feature 6: Accessibility -->
+                <div class="winter-card" style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">♿</div>
+                    <h3 style="color: var(--winter-deep-red); margin-bottom: 1rem;">إمكانية الوصول</h3>
+                    <p style="color: var(--winter-dark-green); line-height: 1.6;">
+                        متوافق مع معايير إمكانية الوصول WCAG 2.1 لضمان تجربة مميزة لجميع المستخدمين
+                    </p>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    
+    <!-- Winter Demo Section -->
+    <section class="winter-demo" style="padding: 4rem 0; background: var(--winter-cream);">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 style="color: var(--winter-deep-red); margin-bottom: 1rem;">
+                    🎄 تجربة عجائب الشتاء
+                </h2>
+                <p style="color: var(--winter-dark-green); font-size: 1.125rem;">
+                    استمتع بتجربة تسوق سحرية مع تأثيرات الثلج المتساقط والألوان الشتوية الدافئة
+                </p>
+            </div>
+            
+            <!-- Sample Product Cards -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                
+                <!-- Sample Product 1 -->
+                <div class="winter-product-card">
+                    <div class="winter-product-image">
+                        <img src="https://via.placeholder.com/300x250/8B0000/FFFFFF?text=منتج+شتوي" alt="منتج شتوي 1" loading="lazy">
+                        <div class="winter-product-badge">جديد</div>
+                    </div>
+                    <div class="winter-product-info">
+                        <h3 class="winter-product-title">معطف شتوي أنيق</h3>
+                        <div class="winter-product-price">
+                            <span class="winter-price-current">299 ريال</span>
+                            <span class="winter-price-original">399 ريال</span>
+                        </div>
+                        <div class="winter-product-actions">
+                            <button class="winter-add-to-cart" data-add-to-cart>
+                                <i class="sicon-shopping-bag"></i>
+                                أضف للسلة
+                            </button>
+                            <button class="winter-add-to-wishlist" data-add-to-wishlist>
+                                <i class="sicon-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sample Product 2 -->
+                <div class="winter-product-card">
+                    <div class="winter-product-image">
+                        <img src="https://via.placeholder.com/300x250/FFD700/8B0000?text=هدية+شتوية" alt="هدية شتوية" loading="lazy">
+                        <div class="winter-product-badge" style="background: var(--winter-gradient-primary); color: var(--winter-gold);">عرض خاص</div>
+                    </div>
+                    <div class="winter-product-info">
+                        <h3 class="winter-product-title">مجموعة هدايا شتوية</h3>
+                        <div class="winter-product-price">
+                            <span class="winter-price-current">199 ريال</span>
+                            <span class="winter-price-original">299 ريال</span>
+                        </div>
+                        <div class="winter-product-actions">
+                            <button class="winter-add-to-cart" data-add-to-cart>
+                                <i class="sicon-shopping-bag"></i>
+                                أضف للسلة
+                            </button>
+                            <button class="winter-add-to-wishlist" data-add-to-wishlist>
+                                <i class="sicon-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sample Product 3 -->
+                <div class="winter-product-card">
+                    <div class="winter-product-image">
+                        <img src="https://via.placeholder.com/300x250/0F4C3A/FFFFFF?text=إكسسوار+شتوي" alt="إكسسوار شتوي" loading="lazy">
+                        <div class="winter-product-badge" style="background: var(--winter-gradient-green); color: var(--winter-gold);">الأكثر مبيعاً</div>
+                    </div>
+                    <div class="winter-product-info">
+                        <h3 class="winter-product-title">وشاح شتوي فاخر</h3>
+                        <div class="winter-product-price">
+                            <span class="winter-price-current">89 ريال</span>
+                        </div>
+                        <div class="winter-product-actions">
+                            <button class="winter-add-to-cart" data-add-to-cart>
+                                <i class="sicon-shopping-bag"></i>
+                                أضف للسلة
+                            </button>
+                            <button class="winter-add-to-wishlist" data-add-to-wishlist>
+                                <i class="sicon-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- Call to Action -->
+            <div style="text-align: center;">
+                <p style="color: var(--winter-dark-green); margin-bottom: 2rem; font-size: 1.125rem;">
+                    جرب التأثيرات التفاعلية عبر النقر على الأزرار أعلاه! 
+                </p>
+                <button class="winter-btn winter-btn--primary" onclick="window.winterSnowfall?.updateIntensity('heavy')" style="margin-right: 1rem;">
+                    ❄️ زيادة كثافة الثلج
+                </button>
+                <button class="winter-btn winter-btn--gold" onclick="window.winterSnowfall?.updateIntensity('light')">
+                    ☀️ تقليل كثافة الثلج
+                </button>
+            </div>
+        </div>
+    </section>
+    
+</div>
+
+<!-- Winter Animations CSS -->
+<style>
+@keyframes winterFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+/* Winter Demo Enhancements */
+.winter-demo .winter-product-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(139, 0, 0, 0.15);
+}
+
+.winter-demo .winter-product-card:hover .winter-product-image img {
+    transform: scale(1.1);
+}
+
+/* Winter Button Hover Effects */
+.winter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(139, 0, 0, 0.2);
+}
+
+.winter-btn--gold:hover {
+    box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .winter-hero h1 {
+        font-size: 2.5rem !important;
+    }
+    
+    .winter-hero p {
+        font-size: 1rem !important;
+    }
+    
+    .winter-hero div[style*="flex"] {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .winter-features div[style*="grid"] {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .winter-demo div[style*="grid"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .winter-hero {
+        padding: 2rem 0 !important;
+    }
+    
+    .winter-features,
+    .winter-demo {
+        padding: 2rem 0 !important;
+    }
+    
+    .winter-card {
+        padding: 1.5rem !important;
+    }
+}
+</style>
+{% endblock %}
