@@ -1,0 +1,233 @@
+<!-- Fashion Winter Wonderland Header -->
+<header class="fashion-header" role="banner">
+    
+    <!-- Luxury Top Bar -->
+    <div class="fashion-topbar">
+        <div class="fashion-container">
+            <div class="fashion-topbar__content">
+                <!-- Brand Message -->
+                <div class="fashion-topbar__message">
+                    <span class="fashion-topbar__text">✨ شحن مجاني للطلبات فوق 500 ريال | عروض الشتاء الحصرية ❄️</span>
+                </div>
+                
+                <!-- Top Actions -->
+                <div class="fashion-topbar__actions">
+                    <!-- Language Switcher -->
+                    {% if store.locales|length > 1 %}
+                        <div class="fashion-language-switcher">
+                            <button class="fashion-lang-toggle" aria-expanded="false">
+                                <i class="sicon-globe"></i>
+                                <span>{{ store.locale|upper }}</span>
+                                <i class="sicon-keyboard_arrow_down"></i>
+                            </button>
+                            <div class="fashion-lang-dropdown">
+                                {% for locale in store.locales %}
+                                    {% if locale != store.locale %}
+                                        <a href="{{ link('locale', locale) }}" class="fashion-dropdown-item">
+                                            {{ locale|upper }}
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <!-- User Account -->
+                    {% if user %}
+                        <div class="fashion-user-menu">
+                            <button class="fashion-user-toggle" aria-expanded="false">
+                                <i class="sicon-user-circle"></i>
+                                <span class="fashion-user-name">{{ user.name }}</span>
+                                <i class="sicon-keyboard_arrow_down"></i>
+                            </button>
+                            <div class="fashion-user-dropdown">
+                                <a href="{{ link('customer.profile') }}" class="fashion-dropdown-item">
+                                    <i class="sicon-user"></i>
+                                    <span>{{ trans('pages.profile.title') }}</span>
+                                </a>
+                                <a href="{{ link('customer.orders') }}" class="fashion-dropdown-item">
+                                    <i class="sicon-receipt"></i>
+                                    <span>{{ trans('pages.orders.title') }}</span>
+                                </a>
+                                <a href="{{ link('customer.wishlist') }}" class="fashion-dropdown-item">
+                                    <i class="sicon-heart"></i>
+                                    <span>{{ trans('pages.wishlist.title') }}</span>
+                                </a>
+                                <div class="fashion-dropdown-divider"></div>
+                                <a href="{{ link('logout') }}" class="fashion-dropdown-item">
+                                    <i class="sicon-logout"></i>
+                                    <span>{{ trans('pages.auth.logout') }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{{ link('login') }}" class="fashion-topbar__link">
+                            <i class="sicon-login"></i>
+                            <span>{{ trans('pages.auth.login') }}</span>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Header -->
+    <div class="fashion-main-header">
+        <div class="fashion-container">
+            <div class="fashion-header__content">
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="fashion-mobile-toggle" aria-label="{{ trans('common.elements.main_menu') }}" aria-expanded="false">
+                    <span class="fashion-hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </button>
+                
+                <!-- Luxury Logo -->
+                <div class="fashion-logo">
+                    <a href="{{ link('home') }}" class="fashion-logo__link">
+                        {% if store.logo %}
+                            <img src="{{ store.logo }}" alt="{{ store.name }}" class="fashion-logo__image">
+                        {% else %}
+                            <h1 class="fashion-logo__text">{{ store.name }}</h1>
+                        {% endif %}
+                    </a>
+                </div>
+                
+                <!-- Luxury Search -->
+                <div class="fashion-search">
+                    <form action="{{ link('search') }}" method="GET" class="fashion-search__form">
+                        <div class="fashion-search__input-group">
+                            <input type="search" 
+                                   name="q" 
+                                   value="{{ request.q }}"
+                                   placeholder="ابحث عن المنتجات الفاخرة..."
+                                   class="fashion-search__input"
+                                   autocomplete="off">
+                            <button type="submit" class="fashion-search__button" aria-label="{{ trans('pages.search.submit') }}">
+                                <i class="sicon-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Header Actions -->
+                <div class="fashion-header__actions">
+                    
+                    <!-- Wishlist -->
+                    <a href="{{ link('wishlist') }}" class="fashion-action-btn fashion-wishlist-btn">
+                        <div class="fashion-action-icon">
+                            <i class="sicon-heart"></i>
+                            <span class="fashion-action-count" data-wishlist-count>{{ wishlist.count }}</span>
+                        </div>
+                        <span class="fashion-action-label">المفضلة</span>
+                    </a>
+                    
+                    <!-- Shopping Bag -->
+                    <button class="fashion-action-btn fashion-cart-btn" data-fashion-cart-toggle>
+                        <div class="fashion-action-icon">
+                            <i class="sicon-handbag"></i>
+                            <span class="fashion-action-count" data-cart-count>{{ cart.count }}</span>
+                        </div>
+                        <span class="fashion-action-label">حقيبة التسوق</span>
+                    </button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Luxury Navigation -->
+    <nav class="fashion-navigation" role="navigation">
+        <div class="fashion-container">
+            <div class="fashion-nav__content">
+                
+                <!-- Main Menu -->
+                <ul class="fashion-main-menu" role="menubar">
+                    <li class="fashion-menu-item" role="none">
+                        <a href="{{ link('home') }}" class="fashion-menu-link" role="menuitem">
+                            <span>الرئيسية</span>
+                        </a>
+                    </li>
+                    
+                    {% for category in categories %}
+                        {% if category.children|length > 0 %}
+                            <li class="fashion-menu-item fashion-menu-item--has-children" role="none">
+                                <a href="{{ category.url }}" class="fashion-menu-link" role="menuitem" aria-haspopup="true">
+                                    <span>{{ category.name }}</span>
+                                    <i class="sicon-keyboard_arrow_down"></i>
+                                </a>
+                                
+                                <!-- Luxury Mega Menu -->
+                                <div class="fashion-mega-menu">
+                                    <div class="fashion-mega-menu__content">
+                                        <div class="fashion-mega-menu__categories">
+                                            {% for child in category.children %}
+                                                <div class="fashion-mega-category">
+                                                    <h4 class="fashion-mega-category__title">
+                                                        <a href="{{ child.url }}">{{ child.name }}</a>
+                                                    </h4>
+                                                    {% if child.children|length > 0 %}
+                                                        <ul class="fashion-mega-category__links">
+                                                            {% for grandchild in child.children %}
+                                                                <li>
+                                                                    <a href="{{ grandchild.url }}" class="fashion-mega-link">
+                                                                        {{ grandchild.name }}
+                                                                    </a>
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        
+                                        <!-- Featured Product in Mega Menu -->
+                                        <div class="fashion-mega-menu__featured">
+                                            <div class="fashion-mega-featured">
+                                                <img src="https://via.placeholder.com/300x200/E8B4B8/4A154B?text=منتج+مميز" alt="منتج مميز" class="fashion-mega-featured__image">
+                                                <div class="fashion-mega-featured__content">
+                                                    <h5 class="fashion-mega-featured__title">المجموعة الشتوية الجديدة</h5>
+                                                    <p class="fashion-mega-featured__description">اكتشف أحدث صيحات الموضة الشتوية</p>
+                                                    <a href="#" class="fashion-btn fashion-btn--outline fashion-btn--sm">تسوق الآن</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li class="fashion-menu-item" role="none">
+                                <a href="{{ category.url }}" class="fashion-menu-link" role="menuitem">
+                                    <span>{{ category.name }}</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    <!-- Special Offers -->
+                    <li class="fashion-menu-item fashion-menu-item--special" role="none">
+                        <a href="{{ link('offers') }}" class="fashion-menu-link fashion-menu-link--special" role="menuitem">
+                            <span>العروض الخاصة</span>
+                            <span class="fashion-menu-badge">جديد</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- Mobile Menu Overlay -->
+                <div class="fashion-mobile-overlay" data-mobile-overlay></div>
+                
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Fashion Sparkle Effects -->
+    <div class="fashion-header-sparkles" aria-hidden="true">
+        {% for i in 1..12 %}
+            <div class="fashion-sparkle fashion-sparkle--{{ i }}">✨</div>
+        {% endfor %}
+    </div>
+    
+</header>
