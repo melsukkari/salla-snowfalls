@@ -1,86 +1,215 @@
-{#
-| Variable         | Type    | Description                     |
-|------------------|---------|---------------------------------|
-| cart             | object  |                                 |
-| cart.items_count | int     |                                 |
-| cart.total       | string  | Formatted total ex: "١٠٠ ر.س"   |
-#}
-{% set important_links = theme.settings.get('important_links') %}
-<header class="store-header">
-  {# Top Nav #}
-  <div class="top-navbar">
-    <div class="container flex justify-between">
-      <div class="flex-1 flex items-center gap-2">
-          {# Footer Menu #}
-          {% if important_links %}
-            <salla-menu source="footer" topnav></salla-menu>
-          {% endif %}
-
-          {# Language & Currency Component #}
-          <div class="header-buttons">
-              {% if store.settings.is_multilingual or store.settings.currencies_enabled %}
-                  <button type="button" onclick="salla.event.dispatch('localization::open')" class="btn--rounded-gray basis-0">
-                      <span class="flag iti__flag iti__{{ user.language.country_code }} rounded-sm"></span>
-                      <span class="mx-1.5">|</span> <span>{{ currency.symbol }}</span>
-                  </button>
-                  <salla-localization-modal></salla-localization-modal>
-              {% endif %}
-          </div>
-
-          {# Scopes | Branches #}
-          {% if store.scope %}
-              <button class="btn--rounded-gray"
-                      onclick="salla.event.dispatch('scopes::open', {'mode': 'default'})">
-                  <i class="sicon-location rtl:ml-1 ltr:mr-1"></i> {{ store.scope.name }}
-              </button>
-          {% endif %}
-
-          {# Search bar #}
-          <div class="header-search flex-1">
-            <salla-search inline oval height="36"></salla-search>
-          </div>
-      </div>
-
-      <salla-contacts is-header></salla-contacts>
+<!-- Winter Wonderland Header Component -->
+<header class="winter-header" role="banner">
+    <!-- Top Navigation Bar -->
+    {% if theme.topnav_is_dark %}
+    <div class="winter-topnav winter-topnav--dark">
+    {% else %}
+    <div class="winter-topnav winter-topnav--light">
+    {% endif %}
+        <div class="container">
+            <div class="winter-topnav__content">
+                <!-- Store Info -->
+                <div class="winter-topnav__info">
+                    {% if store.mobile %}
+                        <a href="tel:{{ store.mobile }}" class="winter-topnav__link">
+                            <i class="sicon-phone"></i>
+                            {{ store.mobile }}
+                        </a>
+                    {% endif %}
+                    {% if store.email %}
+                        <a href="mailto:{{ store.email }}" class="winter-topnav__link">
+                            <i class="sicon-envelope"></i>
+                            {{ store.email }}
+                        </a>
+                    {% endif %}
+                </div>
+                
+                <!-- User Actions -->
+                <div class="winter-topnav__actions">
+                    {% if user %}
+                        <div class="winter-user-menu">
+                            <button class="winter-user-toggle" aria-expanded="false">
+                                <i class="sicon-user"></i>
+                                {{ user.name }}
+                                <i class="sicon-keyboard_arrow_down"></i>
+                            </button>
+                            <div class="winter-user-dropdown">
+                                <a href="{{ link('customer.profile') }}" class="winter-dropdown-item">
+                                    <i class="sicon-user-circle"></i>
+                                    {{ trans('pages.profile.title') }}
+                                </a>
+                                <a href="{{ link('customer.orders') }}" class="winter-dropdown-item">
+                                    <i class="sicon-receipt"></i>
+                                    {{ trans('pages.orders.title') }}
+                                </a>
+                                <a href="{{ link('customer.wishlist') }}" class="winter-dropdown-item">
+                                    <i class="sicon-heart"></i>
+                                    {{ trans('pages.wishlist.title') }}
+                                </a>
+                                <hr class="winter-dropdown-divider">
+                                <a href="{{ link('logout') }}" class="winter-dropdown-item">
+                                    <i class="sicon-logout"></i>
+                                    {{ trans('pages.auth.logout') }}
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{{ link('login') }}" class="winter-topnav__link">
+                            <i class="sicon-login"></i>
+                            {{ trans('pages.auth.login') }}
+                        </a>
+                    {% endif %}
+                    
+                    <!-- Language Switcher -->
+                    {% if store.locales|length > 1 %}
+                        <div class="winter-language-switcher">
+                            <button class="winter-lang-toggle" aria-expanded="false">
+                                <i class="sicon-globe"></i>
+                                {{ store.locale|upper }}
+                                <i class="sicon-keyboard_arrow_down"></i>
+                            </button>
+                            <div class="winter-lang-dropdown">
+                                {% for locale in store.locales %}
+                                    {% if locale != store.locale %}
+                                        <a href="{{ link('locale', locale) }}" class="winter-dropdown-item">
+                                            {{ locale|upper }}
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-
-  {# Main Nav #}
-  <div id="mainnav" class="main-nav-container shadow-default bg-white">
-      <div class="inner bg-inherit">
-          <div class="container">
-              <div class="flex items-stretch justify-between relative">
-                  <div class="flex items-center">
-                      <a class="lg:hidden mburger mburger--collapse leading-none rtl:ml-4 ltr:mr-4" href="#mobile-menu" aria-label="Open-menu">
-                        <i class="sicon-menu text-primary text-2xl"></i>
-                      </a>
-                      <a class="navbar-brand" href="{{ store.url }}">
-                          <img fetchpriority="high" width="100%" height="100%" loading="eager" src="{{ store.logo }}" alt="{{ store.name }} logo">
-                          {% if is_page('index') %}
-                            <h1 class="sr-only">{{ store.name }}</h1>
-                          {% else %}
-                            <h2 class="sr-only">{{ store.name }}</h2>
-                          {% endif %}
-                      </a>
-                      <custom-main-menu></custom-main-menu>
-                  </div>
-                  <div class="flex items-center justify-end">
-                      {% if user.type=='user' %}
-                        <salla-user-menu avatar-only show-header></salla-user-menu>
-                      {% else %}
-                          <button class="header-btn" aria-label="user-icon" onclick="salla.event.dispatch('login::open')">
-                            <i class="header-btn__icon sicon-user-circle"></i>
-                          </button>
-                      {% endif %}
-                      <salla-cart-summary class="ml-4 rtl:ml-[unset] rtl:mr-4">
-                        <i slot="icon" class="header-btn__icon icon sicon-shopping-bag"></i>
-                      </salla-cart-summary>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
+    
+    <!-- Main Header -->
+    <div class="winter-main-header">
+        <div class="container">
+            <div class="winter-header__content">
+                <!-- Mobile Menu Toggle -->
+                <button class="winter-mobile-toggle" aria-label="{{ trans('common.elements.main_menu') }}">
+                    <span class="winter-hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </button>
+                
+                <!-- Store Logo -->
+                <div class="winter-logo">
+                    <a href="{{ link('home') }}" class="winter-logo__link">
+                        {% if store.logo %}
+                            <img src="{{ store.logo }}" alt="{{ store.name }}" class="winter-logo__image">
+                        {% else %}
+                            <h1 class="winter-logo__text">{{ store.name }}</h1>
+                        {% endif %}
+                    </a>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="winter-search">
+                    <form action="{{ link('search') }}" method="GET" class="winter-search__form">
+                        <div class="winter-search__input-group">
+                            <input type="search" 
+                                   name="q" 
+                                   value="{{ request.q }}"
+                                   placeholder="{{ trans('pages.search.placeholder') }}"
+                                   class="winter-search__input"
+                                   autocomplete="off">
+                            <button type="submit" class="winter-search__button" aria-label="{{ trans('pages.search.submit') }}">
+                                <i class="sicon-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Header Actions -->
+                <div class="winter-header__actions">
+                    <!-- Wishlist -->
+                    <a href="{{ link('wishlist') }}" class="winter-action-btn winter-wishlist-btn">
+                        <i class="sicon-heart"></i>
+                        <span class="winter-action-count" data-wishlist-count>{{ wishlist.count }}</span>
+                        <span class="winter-action-label">{{ trans('pages.wishlist.title') }}</span>
+                    </a>
+                    
+                    <!-- Cart -->
+                    <button class="winter-action-btn winter-cart-btn" data-cart-toggle>
+                        <i class="sicon-shopping-bag"></i>
+                        <span class="winter-action-count" data-cart-count>{{ cart.count }}</span>
+                        <span class="winter-action-label">{{ trans('pages.cart.title') }}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation Menu -->
+    {% if theme.header_is_sticky %}
+    <nav class="winter-navigation winter-navigation--sticky" role="navigation">
+    {% else %}
+    <nav class="winter-navigation" role="navigation">
+    {% endif %}
+        <div class="container">
+            <div class="winter-nav__content">
+                <!-- Main Menu -->
+                <ul class="winter-main-menu" role="menubar">
+                    <li class="winter-menu-item" role="none">
+                        <a href="{{ link('home') }}" class="winter-menu-link" role="menuitem">
+                            <i class="sicon-home"></i>
+                            {{ trans('pages.home.title') }}
+                        </a>
+                    </li>
+                    
+                    {% for category in categories %}
+                        {% if category.children|length > 0 %}
+                            <li class="winter-menu-item winter-menu-item--has-children" role="none">
+                                <a href="{{ category.url }}" class="winter-menu-link" role="menuitem" aria-haspopup="true">
+                                    {{ category.name }}
+                                    <i class="sicon-keyboard_arrow_down"></i>
+                                </a>
+                                <ul class="winter-submenu" role="menu">
+                                    {% for child in category.children %}
+                                        <li class="winter-submenu-item" role="none">
+                                            <a href="{{ child.url }}" class="winter-submenu-link" role="menuitem">
+                                                {{ child.name }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="winter-menu-item" role="none">
+                                <a href="{{ category.url }}" class="winter-menu-link" role="menuitem">
+                                    {{ category.name }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    <!-- Additional Pages -->
+                    {% if theme.important_links %}
+                        {% for page in pages %}
+                            <li class="winter-menu-item" role="none">
+                                <a href="{{ page.url }}" class="winter-menu-link" role="menuitem">
+                                    {{ page.title }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+                
+                <!-- Mobile Menu Overlay -->
+                <div class="winter-mobile-overlay" data-mobile-overlay></div>
+            </div>
+        </div>
+    </nav>
 </header>
-{% if store.scope %}
-    <salla-scopes selection="{{ store.scope.display_as == 'popup' ? 'mandatory' : 'optional' }}"></salla-scopes>
-{% endif %}
+
+<!-- Winter Sparkle Effects -->
+<div class="winter-sparkles" aria-hidden="true">
+    {% for i in 1..20 %}
+        <div class="winter-sparkle winter-sparkle--{{ i }}"></div>
+    {% endfor %}
+</div>
