@@ -1,126 +1,179 @@
-{# ############## Shared Variables in all views ################
-| Variable                                           | Type     | Description                                                                                              |
-|----------------------------------------------------|----------|----------------------------------------------------------------------------------------------------------|
-| store                                              | Store    |                                                                                                          |
-| store.id                                           | int      |                                                                                                          |
-| store.name                                         | string   |                                                                                                          |
-| store.username                                     | string   |                                                                                                          |
-| store.description                                  | string   |                                                                                                          |
-| store.slogan                                       | ?string  | * if feature in twilight.json                                                                            |
-| store.logo                                         | string   |                                                                                                          |
-| store.url                                          | string   |                                                                                                          |
-| store.api                                          | string   | the api url for current store                                                                            |
-| store.icon                                         | string   | *fav icon url                                                                                            |
-| store.contacts                                     | object   | [mobile, phone, email, whatsapp, telegram], ex. store.contacts.email                                     |
-| store.social                                       | object   | [instagram, snapchat, twitter, youtube, facebook, pinterest, maroof, whatsapp], ex. store.social.twitter |
-| store.settings                                     | object   |                                                                                                          |
-| store.settings.auth.email_allowed                  | bool     |                                                                                                          |
-| store.settings.auth.mobile_allowed                 | bool     |                                                                                                          |
-| store.settings.auth.is_email_required              | bool     |                                                                                                          |
-| store.settings.cart.apply_coupon_enabled           | bool     | Does visitor allowed to applay coupon in cart page                                                       |
-| store.settings.product.total_sold_enabled          | bool     |                                                                                                          |
-| store.settings.product.fit_type                    | ?string  | null when equal product card size is off, or ['cover', 'contain']                                        |
-| store.settings.category.testimonial_enabled        | bool     | Show random testimonials in category page                                                                |
-| store.settings.tax.number                          | ?string  |                                                                                                          |
-| store.settings.tax.certificate                     | ?string  | certificate image url                                                                                    |
-| store.settings.tax.taxable_prices_enabled          | bool     | Does tax included in the prices ex product_price 100 & tax is 15, price will be 115                      |
-| store.settings.rating_enabled                      | bool     | Is one of: store_enabled or shipping_enabled or products_enabled                                         |
-| store.settings.arabic_numbers_enabled              | bool     | Does the merchant wants the numbers to be shown as Arabic format                                         |
-| store.settings.is_multilingual                     | bool     |                                                                                                          |
-| store.settings.currencies_enabled                  | bool     |     
-| theme                                              | Theme    |                                                                                                          |
-| theme.id                                           | int      |                                                                                                          |
-| theme.name                                         | string   |                                                                                                          |
-| theme.mode                                         | string   | `live`, `preview`                                                                                        |
-| theme.is_rtl                                       | bool     |                                                                                                          |
-| theme.translations_hash                            | int      | to be used in case merchant updated frontend store translations                                          |
-| theme.color                                        | object   |                                                                                                          |
-| theme.color.primary                                | string   |                                                                                                          |
-| theme.color.text                                   | string   | suitable text color comparing to `theme.primary.color`, #000000, #FFFFFF                                 |
-| theme.color.reverse_primary                        | string   |                                                                                                          |
-| theme.color.reverse_text                           | string   | if `theme.text_color=#000000` means that `theme.reverse_text_color=#FFFFFF`                              |
-| theme.color.is_dark                                | bool     | Does main store color `theme.primary.color` considered as dim color?                                     |
-| theme.color.darker(float alpha, ?string hexColor)  | string   | get darker color from `theme.primary.color` or from passed color, `alpha` range from 0.0-1.0             |
-| theme.color.lighter(float alpha, ?string hexColor) | string   | get lighter color from `theme.primary.color` or from passed color, `alpha` range from 0.0-1.0            |
-| theme.font                                         | ?object  | Salla predefined font, null when the theme doesn't have `fonts` feature                                  |
-| theme.font.name                                    | string   | DINNextLTArabic-Regular, Amazon-Ember, Apple, Dubai, Estedad                                             |
-| theme.font.url                                     | string   | css full url ex: 'https://my_store.test/dist/fonts/default.css'                                          |
-| theme.settings                                     | object   | dynamic object with values of the `settings` in twilight.json ex. `theme.settings.topnav_is_dark`        |
-| theme.settings.set(settingName, value)             | string   | set global var, then get it {{theme.settings.get('my_var','fallback') }}                                 |
-| theme.settings.get(settingName, default=null)      | mixed    | get theme setting ex `theme.settings.get('my_var', 'fallback')`                                          |
-#}
 <!DOCTYPE html>
-<html lang="{{ user.language.code }}" dir="{{ user.language.dir }}">
-<!-- بسم الله الرحمن الرحيم -->
+<html lang="{{ store.locale }}" dir="{{ store.locale == 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {{ theme.settings.set('placeholder', 'images/placeholder.png') }}
-
-    {% include 'pages.partials.loading-screen-assets' %}
-
-    <script defer data-cfasync="false" src="{{ 'product-card.js'|asset }}"></script>
-    <script defer src="{{ 'main-menu.js'|asset }}"></script>
-
-    {% block head_scripts %}{% endblock %}
-
-
-    <script data-cfasync="false">
-        window.header_is_sticky = "{{theme.settings.get('header_is_sticky', 'Default Value')}}"
-        window.imageZoom = "{{theme.settings.get('imageZoom')}}"
-        window.can_access_wallet = {{ user.can_access_wallet | json_encode }}
-    </script>
+    <title>{{ page.title }} - {{ store.name }}</title>
     
-    {% hook 'head:start' %}
-    {% hook head %}
-    {% block styles %}{% endblock %}
-    <link rel="stylesheet" href="{{ 'app.css' | asset }}">
-    <link rel="stylesheet" href="{{ theme.font.path|cdn }}"/>
-    <link rel="stylesheet" href="{{ 'fonts/sallaicons.css'|cdn }}"/>
+    <!-- Fashion Winter Wonderland Theme Meta -->
+    <meta name="theme-color" content="#4A154B">
+    <meta name="description" content="{{ store.description }}">
     
+    <!-- Google Fonts - Luxury Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Salla Core Assets -->
+    {{ salla.css }}
+    
+    <!-- Fashion Winter Theme CSS -->
+    <link rel="stylesheet" href="{{ 'fashion-winter-theme.css' | asset }}">
+    
+    <!-- Fashion Winter Color Palette CSS Variables -->
     <style>
         :root {
-            --font-main: '{{theme.font.name}}';
-            --color-primary: {{ theme.color.primary }};
-            --color-primary-dark: {{ theme.color.darker(0.15) }};
-            --color-primary-light: {{ theme.color.lighter(0.15) }};
-            --color-primary-reverse: {{ theme.color.reverse_text }};
+            /* Luxury Fashion Color Palette */
+            --fashion-rose-gold: #E8B4B8;
+            --fashion-champagne: #F7E7CE;
+            --fashion-deep-plum: #4A154B;
+            --fashion-pearl-white: #FEFEFE;
+            --fashion-soft-grey: #F5F5F7;
+            --fashion-charcoal: #2C2C2E;
+            --fashion-accent-gold: #D4AF37;
+            --fashion-blush-pink: #FFE4E1;
+            
+            /* Gradients */
+            --fashion-gradient-primary: linear-gradient(135deg, var(--fashion-deep-plum) 0%, var(--fashion-rose-gold) 100%);
+            --fashion-gradient-luxury: linear-gradient(135deg, var(--fashion-champagne) 0%, var(--fashion-pearl-white) 100%);
+            --fashion-gradient-accent: linear-gradient(135deg, var(--fashion-accent-gold) 0%, var(--fashion-rose-gold) 100%);
+            
+            /* Typography */
+            --fashion-font-heading: 'Playfair Display', serif;
+            --fashion-font-body: 'Inter', sans-serif;
+            
+            /* Spacing System */
+            --fashion-space-xs: 0.25rem;
+            --fashion-space-sm: 0.5rem;
+            --fashion-space-md: 1rem;
+            --fashion-space-lg: 1.5rem;
+            --fashion-space-xl: 2rem;
+            --fashion-space-2xl: 3rem;
+            --fashion-space-3xl: 4rem;
+            
+            /* Border Radius */
+            --fashion-radius-sm: 6px;
+            --fashion-radius-md: 12px;
+            --fashion-radius-lg: 18px;
+            --fashion-radius-xl: 24px;
+            
+            /* Shadows */
+            --fashion-shadow-soft: 0 2px 8px rgba(74, 21, 75, 0.08);
+            --fashion-shadow-medium: 0 4px 16px rgba(74, 21, 75, 0.12);
+            --fashion-shadow-strong: 0 8px 32px rgba(74, 21, 75, 0.16);
+            --fashion-shadow-luxury: 0 12px 48px rgba(74, 21, 75, 0.20);
+            
+            /* Transitions */
+            --fashion-transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --fashion-transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --fashion-transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Theme Settings from Twilight */
+            --enable-snow: {{ theme.enable_snow ? 'true' : 'false' }};
+            --snow-intensity: {{ theme.snow_intensity | default('subtle') }};
+            --fashion-effects: {{ theme.fashion_effects | default('true') }};
+            --modal-coverage: {{ theme.modal_coverage | default('90') }}%;
         }
     </style>
-    {# tracking services, custom css feature. #}
-    {% hook 'head:end' %}
 </head>
-<body id="app" class="overflow-x-hidden {% hook 'body:classes' %}
-  {{ theme.settings.get('footer_is_dark') ? ' footer-is-dark' : ' footer-is-light' }}
-  {{ theme.settings.get('topnav_is_dark') ? ' topnav-is-dark' : '' }}
-  {{ theme.settings.get('sticky_add_to_cart') ? ' is-sticky-product-bar' : '' }}
-  ">
-  <div class="loader-init"></div>
-<noscript>
-    To get full functionality of this site you need to enable JavaScript. Here is how
-    <a href="https://www.enable-javascript.com/" rel="noreferrer"
-       target="_blank">To enable JavaScript on webpage</a>.
-</noscript>
-<div class="app-inner flex flex-col min-h-full">
-    {% hook 'body:start' %}
-    {% component 'header.header' %}
-    {% block content %}{% endblock %}
-    {% component 'footer.footer' %}
-</div>
-{% hook 'body:end' %}
-<script defer src="{{ 'app.js' | asset }}"></script>
 
-{# Winter Snowfall Effect #}
-<script defer src="{{ 'js/snow.js' | asset }}"></script>
-
-{# Twilight Components #}
-<salla-offer-modal></salla-offer-modal>
-<salla-search></salla-search>
-
-{% if user.type=='guest' %}
-    <salla-login-modal></salla-login-modal>
-{% endif %}
-{% block scripts %}{% endblock %}
+<body class="fashion-winter-theme {{ store.locale == 'ar' ? 'rtl' : 'ltr' }}" 
+      data-snow-enabled="{{ theme.enable_snow ? 'true' : 'false' }}"
+      data-fashion-effects="{{ theme.fashion_effects ? 'true' : 'false' }}">
+    
+    <!-- Snow Waterfall Canvas -->
+    <canvas id="fashion-snow-canvas" 
+            class="fashion-snow-canvas"
+            aria-hidden="true"></canvas>
+    
+    <!-- Luxury Loading Overlay -->
+    <div id="fashion-loading-overlay" class="fashion-loading-overlay">
+        <div class="fashion-loading-content">
+            <div class="fashion-loading-logo">
+                {% if store.logo %}
+                    <img src="{{ store.logo }}" alt="{{ store.name }}" class="fashion-loading-logo-img">
+                {% else %}
+                    <h2 class="fashion-loading-logo-text">{{ store.name }}</h2>
+                {% endif %}
+            </div>
+            <div class="fashion-loading-spinner"></div>
+            <p class="fashion-loading-text">جاري تحضير تجربة التسوق الفاخرة...</p>
+        </div>
+    </div>
+    
+    <!-- Holiday Luxury Ribbon -->
+    {% if theme.show_holiday_ribbon %}
+        {% include 'components.holiday-luxury-ribbon' %}
+    {% endif %}
+    
+    <!-- Fashion Header -->
+    {% include 'components.header.fashion-header' %}
+    
+    <!-- Main Content -->
+    <main id="main-content" class="fashion-main-content">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Fashion Footer -->
+    {% include 'components.footer.fashion-footer' %}
+    
+    <!-- Modal Overlay Container -->
+    <div id="fashion-modal-container" class="fashion-modal-container"></div>
+    
+    <!-- Fashion Theme Scripts -->
+    <script src="{{ 'fashion-snow-waterfall.js' | asset }}" defer></script>
+    <script src="{{ 'fashion-modal-system.js' | asset }}" defer></script>
+    <script src="{{ 'fashion-winter-theme.js' | asset }}" defer></script>
+    
+    <!-- Salla Core Scripts -->
+    {{ salla.js }}
+    
+    <!-- Fashion Theme Initialization -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Fashion Winter Theme
+            if (typeof FashionWinterTheme !== 'undefined') {
+                window.fashionTheme = FashionWinterTheme.init({
+                    enableSnow: {{ theme.enable_snow ? 'true' : 'false' }},
+                    snowIntensity: '{{ theme.snow_intensity | default('subtle') }}',
+                    fashionEffects: {{ theme.fashion_effects | default('true') }},
+                    modalCoverage: '{{ theme.modal_coverage | default('90') }}%',
+                    luxuryAnimations: {{ theme.luxury_animations | default('true') }},
+                    colorScheme: '{{ theme.fashion_color_scheme | default('luxury') }}'
+                });
+            }
+            
+            // Initialize Snow Waterfall
+            if ({{ theme.enable_snow ? 'true' : 'false' }} && typeof FashionSnowWaterfall !== 'undefined') {
+                window.fashionSnow = FashionSnowWaterfall.init({
+                    canvas: document.getElementById('fashion-snow-canvas'),
+                    intensity: '{{ theme.snow_intensity | default('subtle') }}',
+                    style: 'waterfall',
+                    particleCount: {{ theme.snow_particle_count | default('80') }},
+                    elegantMode: true
+                });
+            }
+            
+            // Initialize Modal System
+            if (typeof FashionModalSystem !== 'undefined') {
+                window.fashionModals = FashionModalSystem.init({
+                    coverage: '{{ theme.modal_coverage | default('90') }}%',
+                    luxuryTransitions: true,
+                    closeOnOverlay: true
+                });
+            }
+            
+            // Hide loading overlay
+            setTimeout(() => {
+                const loadingOverlay = document.getElementById('fashion-loading-overlay');
+                if (loadingOverlay) {
+                    loadingOverlay.classList.add('fashion-loading-overlay--hidden');
+                    setTimeout(() => {
+                        loadingOverlay.style.display = 'none';
+                    }, 500);
+                }
+            }, 1500);
+        });
+    </script>
 </body>
 </html>
