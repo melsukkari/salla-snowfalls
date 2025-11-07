@@ -1,187 +1,72 @@
 <!DOCTYPE html>
 <html lang="{{ store.locale }}" dir="{{ store.locale == 'ar' ? 'rtl' : 'ltr' }}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page.title }} - {{ store.name }}</title>
-    
-    <!-- Fashion Winter Wonderland Theme Meta -->
-    <meta name="theme-color" content="#4A154B">
-    <meta name="description" content="{{ store.description }}">
-    
-    <!-- Google Fonts - Luxury Typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Salla Core Assets -->
-    {{ salla.css }}
-    
-    <!-- Fashion Winter Theme CSS -->
-    <link rel="stylesheet" href="{{ 'fashion-winter-theme.css' | asset }}">
-    
-    <!-- Fashion Winter Color Palette CSS Variables -->
-    <style>
-        :root {
-            /* Luxury Fashion Color Palette */
-            --fashion-rose-gold: #E8B4B8;
-            --fashion-champagne: #F7E7CE;
-            --fashion-deep-plum: #4A154B;
-            --fashion-pearl-white: #FEFEFE;
-            --fashion-soft-grey: #F5F5F7;
-            --fashion-charcoal: #2C2C2E;
-            --fashion-accent-gold: #D4AF37;
-            --fashion-blush-pink: #FFE4E1;
-            
-            /* Rest of your CSS variables (unchanged) */
-            --fashion-font-heading: 'Playfair Display', serif;
-            --fashion-font-body: 'Inter', sans-serif;
-            /* ... keep all your :root vars ... */
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }} - {{ store.name }}</title>
+  {{ salla.css }}
 </head>
+<body class="{{ store.locale == 'ar' ? 'rtl' : 'ltr' }}">
 
-<body class="fashion-winter-theme {{ store.locale == 'ar' ? 'rtl' : 'ltr' }}"
-      data-snow-enabled="{{ theme.settings.get('enable_snow', false) ? 'true' : 'false' }}"
-      data-fashion-effects="{{ theme.settings.get('fashion_effects', true) ? 'true' : 'false' }}">
-    
-    <!-- ❄️ Snow Canvas (Only if enabled) -->
-    {% if theme.settings.get('enable_snow', false) %}
-        <canvas id="fashion-snow-canvas" 
-                class="fashion-snow-canvas"
-                style="
-                    position: fixed;
-                    top: 0; left: 0;
-                    width: 100%; height: 100%;
-                    pointer-events: none;
-                    z-index: 9999;
-                    opacity: 0.92;
-                "
-                aria-hidden="true"></canvas>
-    {% endif %}
-    
-    <!-- Luxury Loading Overlay -->
-    <div id="fashion-loading-overlay" class="fashion-loading-overlay">
-        <div class="fashion-loading-content">
-            <div class="fashion-loading-logo">
-                {% if store.logo %}
-                    <img src="{{ store.logo }}" alt="{{ store.name }}" class="fashion-loading-logo-img">
-                {% else %}
-                    <h2 class="fashion-loading-logo-text">{{ store.name }}</h2>
-                {% endif %}
-            </div>
-            <div class="fashion-loading-spinner"></div>
-            <p class="fashion-loading-text">جاري تحضير تجربة التسوق الفاخرة...</p>
-        </div>
-    </div>
-    
-    <!-- Holiday Luxury Ribbon -->
-    {% if theme.settings.get('show_holiday_ribbon', false) %}
-        {% include 'components.holiday-luxury-ribbon' %}
-    {% endif %}
-    
-    <!-- Fashion Header -->
-    {% include 'components.header.fashion-header' %}
-    
-    <!-- Main Content -->
-    <main id="main-content" class="fashion-main-content">
-        {% block content %}{% endblock %}
-    </main>
-    
-    <!-- Fashion Footer -->
-    {% include 'components.footer.fashion-footer' %}
-    
-    <!-- Modal Overlay Container -->
-    <div id="fashion-modal-container" class="fashion-modal-container"></div>
-    
-    <!-- Salla Core Scripts -->
-    {{ salla.js }}
-    
-    <!-- ❄️ Inline Snow Script (No external file needed) -->
-    {% if theme.settings.get('enable_snow', false) %}
-    <script>
-    (function() {
-        const canvas = document.getElementById('fashion-snow-canvas');
-        if (!canvas) return;
-        
-        const ctx = canvas.getContext('2d');
-        let width = window.innerWidth;
-        let height = window.innerHeight;
-        canvas.width = width;
-        canvas.height = height;
-        
-        // Get intensity from theme settings
-        const intensity = '{{ theme.settings.get("snow_intensity", "subtle") }}';
-        const particleCount = parseInt('{{ theme.settings.get("snow_particle_count", 80) }}');
-        
-        const flakes = [];
-        const counts = {
-            subtle: Math.max(30, particleCount * 0.6),
-            medium: particleCount,
-            heavy: Math.min(200, particleCount * 1.5)
-        };
-        const maxFlakes = counts[intensity] || counts.medium;
-        
-        class Snowflake {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * -height;
-                this.size = Math.random() * 3 + 1;
-                this.speed = Math.random() * 2 + 0.2;
-                this.wind = (Math.random() - 0.5) * 0.7;
-                this.opacity = Math.random() * 0.4 + 0.3;
-            }
-            update() {
-                this.y += this.speed;
-                this.x += this.wind;
-                if (this.y > height) this.y = -10;
-                if (this.x > width) this.x = 0;
-                if (this.x < 0) this.x = width;
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-                ctx.fill();
-            }
-        }
-        
-        for (let i = 0; i < maxFlakes; i++) {
-            flakes.push(new Snowflake());
-        }
-        
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            flakes.forEach(f => { f.update(); f.draw(); });
-            requestAnimationFrame(animate);
-        }
-        
-        window.addEventListener('resize', () => {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
-        });
-        
-        animate();
-    })();
-    </script>
-    {% endif %}
-    
-    <!-- Fashion Theme Initialization -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Hide loading overlay
-            setTimeout(() => {
-                const overlay = document.getElementById('fashion-loading-overlay');
-                if (overlay) {
-                    overlay.style.opacity = '0';
-                    setTimeout(() => {
-                        overlay.style.display = 'none';
-                    }, 500);
-                }
-            }, 1200);
-        });
-    </script>
+  <!-- ❄️ Snow Canvas (only if enabled) -->
+  {% if theme.settings.get('enable_snow', false) %}
+    <canvas id="snow-canvas" 
+            style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
+  {% endif %}
+
+  {% component 'header.header' %}
+  {% block content %}{% endblock %}
+  {% component 'footer.footer' %}
+
+  {{ salla.js }}
+
+  <!-- ❄️ Inline Snow Script -->
+  {% if theme.settings.get('enable_snow', false) %}
+  <script>
+  (function() {
+    const canvas = document.getElementById('snow-canvas');
+    const ctx = canvas.getContext('2d');
+    let w = window.innerWidth, h = window.innerHeight;
+    canvas.width = w; canvas.height = h;
+
+    const flakes = [];
+    const count = parseInt('{{ theme.settings.get("snow_particle_count", 80) }}') || 80;
+
+    class Flake {
+      constructor() {
+        this.x = Math.random() * w;
+        this.y = Math.random() * -h;
+        this.s = Math.random() * 3 + 1;
+        this.v = Math.random() * 2 + 0.2;
+      }
+      update() {
+        this.y += this.v;
+        if (this.y > h) this.y = -10;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.s, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < count; i++) flakes.push(new Flake());
+
+    function animate() {
+      ctx.clearRect(0,0,w,h);
+      flakes.forEach(f => { f.update(); f.draw(); });
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    });
+  })();
+  </script>
+  {% endif %}
+
 </body>
 </html>
