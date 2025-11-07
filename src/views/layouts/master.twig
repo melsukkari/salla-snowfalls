@@ -1,72 +1,143 @@
 <!DOCTYPE html>
-<html lang="{{ store.locale }}" dir="{{ store.locale == 'ar' ? 'rtl' : 'ltr' }}">
+<html lang="{{ user.language.code }}" dir="{{ user.language.dir }}">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ page.title }} - {{ store.name }}</title>
-  {{ salla.css }}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    {# SEO Meta Tags #}
+    <title>{{ page.title }} - {{ store.name }}</title>
+    <meta name="description" content="{{ page.description|default(store.description) }}">
+    <meta name="keywords" content="{{ page.keywords|default(store.keywords) }}">
+    
+    {# Open Graph #}
+    <meta property="og:title" content="{{ page.title }} - {{ store.name }}">
+    <meta property="og:description" content="{{ page.description|default(store.description) }}">
+    <meta property="og:image" content="{{ store.logo }}">
+    <meta property="og:url" content="{{ page.url }}">
+    <meta property="og:type" content="website">
+    
+    {# Twitter Card #}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ page.title }} - {{ store.name }}">
+    <meta name="twitter:description" content="{{ page.description|default(store.description) }}">
+    <meta name="twitter:image" content="{{ store.logo }}">
+    
+    {# Favicon #}
+    <link rel="icon" type="image/png" href="{{ store.favicon }}">
+    <link rel="apple-touch-icon" href="{{ store.logo }}">
+    
+    {# Fonts #}
+    {% if theme.settings.get('font') %}
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family={{ theme.settings.get('font')|replace({' ': '+'}) }}:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {% endif %}
+    
+    {# Theme Styles #}
+    <link rel="stylesheet" href="{{ 'css/winter-overlay.css' | asset }}">
+    
+    {# Salla Core Styles #}
+    <link rel="stylesheet" href="{{ 'app.css' | asset }}">
+    
+    {# Custom CSS Variables from Theme Settings #}
+    <style>
+        :root {
+            --primary-color: {{ theme.settings.get('primary_color', '#8A2BE2') }};
+            --secondary-color: {{ theme.settings.get('secondary_color', '#9D4EDD') }};
+            --bg-primary: {{ theme.settings.get('background_color', '#121212') }};
+            --text-primary: {{ theme.settings.get('text_color', '#E0E0E0') }};
+            {% if theme.settings.get('font') %}
+            --font-family: '{{ theme.settings.get('font') }}', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            {% endif %}
+        }
+        
+        {% if theme.settings.get('font') %}
+        body {
+            font-family: var(--font-family);
+        }
+        {% endif %}
+    </style>
+    
+    {# Additional Head Content #}
+    {% block head %}{% endblock %}
+    
+    {# Salla Analytics #}
+    {{ salla.head }}
 </head>
-<body class="{{ store.locale == 'ar' ? 'rtl' : 'ltr' }}">
 
-  <!-- ❄️ Snow Canvas (only if enabled) -->
-  {% if theme.settings.get('enable_snow', false) %}
-    <canvas id="snow-canvas" 
-            style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
-  {% endif %}
-
-  {% component 'header.header' %}
-  {% block content %}{% endblock %}
-  {% component 'footer.footer' %}
-
-  {{ salla.js }}
-
-  <!-- ❄️ Inline Snow Script -->
-  {% if theme.settings.get('enable_snow', false) %}
-  <script>
-  (function() {
-    const canvas = document.getElementById('snow-canvas');
-    const ctx = canvas.getContext('2d');
-    let w = window.innerWidth, h = window.innerHeight;
-    canvas.width = w; canvas.height = h;
-
-    const flakes = [];
-    const count = parseInt('{{ theme.settings.get("snow_particle_count", 80) }}') || 80;
-
-    class Flake {
-      constructor() {
-        this.x = Math.random() * w;
-        this.y = Math.random() * -h;
-        this.s = Math.random() * 3 + 1;
-        this.v = Math.random() * 2 + 0.2;
-      }
-      update() {
-        this.y += this.v;
-        if (this.y > h) this.y = -10;
-      }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.s, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255,255,255,0.8)';
-        ctx.fill();
-      }
-    }
-
-    for (let i = 0; i < count; i++) flakes.push(new Flake());
-
-    function animate() {
-      ctx.clearRect(0,0,w,h);
-      flakes.forEach(f => { f.update(); f.draw(); });
-      requestAnimationFrame(animate);
-    }
-    animate();
-
-    window.addEventListener('resize', () => {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    });
-  })();
-  </script>
-  {% endif %}
-
+<body class="{{ page.slug }}">
+    {# Salla Body Scripts #}
+    {{ salla.body }}
+    
+    {# Header Component #}
+    {% component 'header.header' %}
+    
+    {# Main Content #}
+    <main class="site-content">
+        {% block content %}{% endblock %}
+    </main>
+    
+    {# Footer Component #}
+    {% component 'footer.footer' %}
+    
+    {# Category Overlay Board Component #}
+    {% if theme.settings.get('enable_overlay_navigation', true) %}
+        {% component 'home.category-overlay-board' %}
+    {% endif %}
+    
+    {# Pass theme settings to JavaScript #}
+    <script>
+        window.THEME_SETTINGS = {
+            primaryColor: '{{ theme.settings.get('primary_color', '#8A2BE2') }}',
+            secondaryColor: '{{ theme.settings.get('secondary_color', '#9D4EDD') }}',
+            backgroundColor: '{{ theme.settings.get('background_color', '#121212') }}',
+            textColor: '{{ theme.settings.get('text_color', '#E0E0E0') }}',
+            enableSnow: {{ theme.settings.get('enable_snow', true) ? 'true' : 'false' }},
+            snowIntensity: {{ theme.settings.get('snow_intensity', 120) }},
+            enableOverlayNavigation: {{ theme.settings.get('enable_overlay_navigation', true) ? 'true' : 'false' }},
+            overlayWidth: {{ theme.settings.get('overlay_width', 90) }},
+            overlayHeight: {{ theme.settings.get('overlay_height', 90) }}
+        };
+        
+        // Global variables for scripts
+        window.ENABLE_OVERLAY_NAVIGATION = {{ theme.settings.get('enable_overlay_navigation', true) ? 'true' : 'false' }};
+        window.OVERLAY_WIDTH = {{ theme.settings.get('overlay_width', 90) }};
+        window.OVERLAY_HEIGHT = {{ theme.settings.get('overlay_height', 90) }};
+        window.SNOW_INTENSITY = {{ theme.settings.get('snow_intensity', 120) }};
+    </script>
+    
+    {# Salla Core JavaScript #}
+    <script defer src="{{ 'app.js' | asset }}"></script>
+    
+    {# Overlay Board System #}
+    {% if theme.settings.get('enable_overlay_navigation', true) %}
+        <script defer src="{{ 'js/overlay-board.js' | asset }}"></script>
+    {% endif %}
+    
+    {# Snow Waterfall Effect #}
+    {% if theme.settings.get('enable_snow', true) %}
+        <script defer src="{{ 'js/snow-waterfall.js' | asset }}"></script>
+    {% endif %}
+    
+    {# Additional Scripts #}
+    {% block scripts %}{% endblock %}
+    
+    {# Cart Drawer (Salla Native) #}
+    {% if theme.settings.get('enable_cart_drawer', true) %}
+        <script>
+            // Initialize Salla Cart Drawer
+            if (window.salla) {
+                salla.event.cart.updated(() => {
+                    console.log('Cart updated');
+                });
+            }
+        </script>
+    {% endif %}
+    
+    {# Accessibility: Skip to Content Link #}
+    <a href="#main-content" class="skip-to-content" style="position: absolute; left: -9999px; z-index: 999;">
+        {{ trans('common.skip_to_content') }}
+    </a>
 </body>
 </html>
