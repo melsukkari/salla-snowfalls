@@ -1,51 +1,225 @@
 {
-  "name": "Winter Overlay Board",
-  "version": "1.0.0",
-  "description": "Premium dark winter theme with overlay-based category navigation and realistic snowfall effects",
-  "author": "Salla Developer",
-  "license": "MIT",
-  "support": {
-    "email": "support@example.com",
-    "docs": "https://docs.salla.dev"
+  "name": {
+    "ar": "ثلج الشتاء",
+    "en": "Winter Snowfall"
   },
-  "screenshots": [
-    "screenshot.png"
+  "repository": "https://github.com/melsukkari/salla-snowfalls",
+  "author_email": "your@email.com",
+  "features": [
+    "mega-menu",
+    "fonts",
+    "color",
+    "breadcrumb",
+    "unite-cards-height",
+    "component-featured-products",
+    "component-fixed-banner",
+    "component-fixed-products",
+    "component-products-slider",
+    "component-photos-slider",
+    "component-parallax-background",
+    "component-testimonials",
+    "component-square-photos",
+    "component-store-features",
+    "component-youtube",
+    "menu-images",
+    "filters"
   ],
   "settings": [
     {
+      "id": "squar_photo_bg_image_size",
+      "type": "items",
+      "format": "dropdown-list",
+      "label": "طريقة عرض الصور في قسم قائمة عناصر ",
+      "description": null,
+      "labelHTML": null,
+      "icon": "sicon-list",
+      "selected": [
+        {
+          "label": "اظهار الصورة كاملةً في المنتصف (Contain)",
+          "value": "contain",
+          "key": "f4adec13-6e4c-654b-b978-b2807935ced9"
+        }
+      ],
+      "options": [
+        {
+          "label": "تغطية الصورة كامل المساحة مع المحافظة على أبعاد الصورة (Cover)",
+          "value": "cover",
+          "key": "e9c8ea8f-c5c6-234e-935-3bce269afde4"
+        },
+        {
+          "label": "اظهار الصورة كاملةً في المنتصف (Contain)",
+          "value": "contain",
+          "key": "f4adec13-6e4c-654b-b978-b2807935ced9"
+        }
+      ],
+      "source": "Manual",
+      "required": true
+    },
+    {
+      "type": "boolean",
+      "icon": "sicon-toggle-off",
+      "label": "وضع عمودي للمنتجات في مربع المنتجات الثابتة في الصفحة الرئيسية",
+      "description": null,
+      "id": "vertical_fixed_products",
+      "format": "switch",
+      "required": false,
+      "value": false,
+      "selected": false
+    },
+    {
+      "type": "boolean",
+      "id": "is_more_button_enabled",
+      "label": "عرض (زر الكل) في الصفحة الرئيسية",
+      "format": "switch"
+    },
+    {
+      "type": "static",
+      "id": "static-line1",
+      "format": "line"
+    },
+    {
       "type": "static",
       "format": "title",
-      "id": "general-header",
-      "value": "إعدادات عامة",
+      "id": "static-label2",
+      "value": "خيارات أعلى الصفحة",
       "variant": "h6"
     },
     {
-      "type": "color",
-      "id": "primary_color",
-      "label": "اللون الأساسي",
-      "format": "picker",
-      "value": "#8A2BE2"
+      "id": "header_is_sticky",
+      "label": "تثبت القائمة الرئيسية أعلى الصفحة عند التمرير لأسفل",
+      "description": "يُنصح بالغاء تفعيلها في حالة وجود عناصر كثيرة في القائمة المنسدلة",
+      "type": "boolean",
+      "icon": "sicon-toggle-off",
+      "format": "switch",
+      "required": false,
+      "value": true,
+      "selected": true
     },
     {
-      "type": "color",
-      "id": "secondary_color",
-      "label": "اللون الثانوي",
-      "format": "picker",
-      "value": "#9D4EDD"
+      "type": "boolean",
+      "icon": "sicon-toggle-off",
+      "label": "شريط علوي داكن",
+      "description": null,
+      "id": "topnav_is_dark",
+      "format": "switch",
+      "required": false,
+      "value": true,
+      "selected": false
     },
     {
-      "type": "color",
-      "id": "background_color",
-      "label": "لون الخلفية",
-      "format": "picker",
-      "value": "#121212"
+      "type": "boolean",
+      "icon": "sicon-toggle-off",
+      "label": "عرض روابط الصفحات الهامة في الشريط العلوي",
+      "description": "مثل صفحة الهبوط ، المدونة ،الصفحات التعريفية",
+      "id": "important_links",
+      "format": "switch",
+      "required": false,
+      "value": true,
+      "selected": true
     },
     {
-      "type": "color",
-      "id": "text_color",
-      "label": "لون النص",
-      "format": "picker",
-      "value": "#E0E0E0"
+      "type": "static",
+      "id": "static-line3",
+      "format": "line"
+    },
+    {
+      "type": "static",
+      "format": "title",
+      "id": "static-label4",
+      "value": "خيارات أسفل الصفحة",
+      "variant": "h6"
+    },
+    {
+      "type": "boolean",
+      "icon": "sicon-toggle-off",
+      "label": "الوضع الداكن",
+      "description": null,
+      "id": "footer_is_dark",
+      "format": "switch",
+      "required": false,
+      "value": true,
+      "selected": false
+    },
+    {
+      "type": "static",
+      "id": "static-line5",
+      "format": "line"
+    },
+    {
+      "type": "static",
+      "format": "title",
+      "id": "static-label6",
+      "value": "خيارات صفحة المنتج",
+      "variant": "h6"
+    },
+    {
+      "type": "boolean",
+      "icon": "sicon-toggle-off",
+      "label": "تثبيت زر الإضافة والكمية أسفل شاشة الجوال",
+      "description": null,
+      "id": "sticky_add_to_cart",
+      "format": "switch",
+      "required": false,
+      "value": true,
+      "selected": true
+    },
+    {
+      "type": "boolean",
+      "icon": "sicon-toggle-off",
+      "label": "اظهار الوسوم",
+      "description": null,
+      "id": "show_tags",
+      "format": "switch",
+      "required": false,
+      "value": true,
+      "selected": true
+    },
+    {
+      "id": "slider_background_size",
+      "type": "items",
+      "format": "dropdown-list",
+      "label": "طريقة عرض الصور في سليدر صور المنتج",
+      "description": null,
+      "labelHTML": null,
+      "icon": "sicon-list",
+      "selected": [
+        {
+          "label": "اظهار الصورة كاملةً في المنتصف (Contain)",
+          "value": "contain",
+          "key": "f4adec13-6e4c-433b-b141-b2807935ced9"
+        }
+      ],
+      "options": [
+        {
+          "label": "تغطية الصورة كامل المساحة مع المحافظة على أبعاد الصورة (Cover)",
+          "value": "cover",
+          "key": "e9c8ea8f-c5c6-438e-9d45-3bce269afde4"
+        },
+        {
+          "label": "اظهار الصورة كاملةً في المنتصف (Contain)",
+          "value": "contain",
+          "key": "f4adec13-6e4c-433b-b141-b2807935ced9"
+        }
+      ],
+      "source": "Manual",
+      "required": true
+    },
+    {
+      "type": "boolean",
+      "icon": "sicon-toggle-off",
+      "label": "تكبير الصور في سليدر صور المنتج",
+      "description": "هذه الخاصية تمكنك من تكبير الصورة لتسهل رؤية المزيد من التفاصيل بها",
+      "id": "imageZoom",
+      "format": "switch",
+      "required": false,
+      "value": false,
+      "selected": false
+    },
+
+    {
+      "type": "static",
+      "format": "line",
+      "id": "winter-effects-line"
     },
     {
       "type": "static",
@@ -65,192 +239,18 @@
     },
     {
       "type": "number",
-      "id": "snow_intensity",
-      "label": "كثافة الثلج",
-      "format": "range",
-      "min": 50,
-      "max": 200,
-      "step": 10,
-      "value": 120
-    },
-    {
-      "type": "static",
-      "format": "title",
-      "id": "overlay-header",
-      "value": "⚡ إعدادات اللوحة التفاعلية",
-      "variant": "h6"
-    },
-    {
-      "type": "boolean",
-      "id": "enable_overlay_navigation",
-      "label": "تفعيل التصفح باللوحة التفاعلية",
-      "format": "switch",
-      "required": false,
-      "value": true,
-      "selected": true
-    },
-    {
-      "type": "number",
-      "id": "overlay_width",
-      "label": "عرض اللوحة (%)",
-      "format": "range",
-      "min": 70,
-      "max": 95,
-      "step": 5,
-      "value": 90
-    },
-    {
-      "type": "number",
-      "id": "overlay_height",
-      "label": "ارتفاع اللوحة (%)",
-      "format": "range",
-      "min": 70,
-      "max": 95,
-      "step": 5,
-      "value": 90
-    },
-    {
-      "type": "static",
-      "format": "title",
-      "id": "fonts-header",
-      "value": "الخطوط",
-      "variant": "h6"
-    },
-    {
-      "type": "font",
-      "id": "font",
-      "label": "خط المتجر",
-      "format": "select",
-      "value": "Inter"
-    },
-    {
-      "type": "static",
-      "format": "title",
-      "id": "header-settings",
-      "value": "إعدادات الهيدر",
-      "variant": "h6"
-    },
-    {
-      "type": "boolean",
-      "id": "sticky_header",
-      "label": "تثبيت الهيدر",
-      "format": "switch",
-      "value": true
-    },
-    {
-      "type": "select",
-      "id": "header_layout",
-      "label": "تخطيط الهيدر",
-      "options": [
-        {
-          "label": "تقليدي",
-          "value": "classic"
-        },
-        {
-          "label": "حديث",
-          "value": "modern"
-        },
-        {
-          "label": "مبسط",
-          "value": "minimal"
-        }
-      ],
-      "value": "modern"
-    },
-    {
-      "type": "static",
-      "format": "title",
-      "id": "footer-settings",
-      "value": "إعدادات الفوتر",
-      "variant": "h6"
-    },
-    {
-      "type": "textarea",
-      "id": "footer_about",
-      "label": "نبذة عن المتجر",
-      "placeholder": "أدخل نبذة مختصرة عن متجرك",
-      "value": ""
-    },
-    {
-      "type": "boolean",
-      "id": "show_payment_methods",
-      "label": "إظهار طرق الدفع",
-      "format": "switch",
-      "value": true
+      "id": "snow_particle_count",
+      "label": "عدد بلورات الثلج",
+      "format": "integer",
+      "value": 80,
+      "minimum": 30,
+      "maximum": 150
     }
   ],
-  "features": [
-    {
-      "key": "mega-menu",
-      "name": "القائمة الضخمة",
-      "description": "قائمة تصفح متقدمة مع عرض الفئات والمنتجات"
-    },
-    {
-      "key": "overlay-navigation",
-      "name": "التصفح باللوحة التفاعلية",
-      "description": "نظام تصفح متقدم بلوحات تفاعلية بدون إعادة تحميل الصفحة"
-    },
-    {
-      "key": "snow-effects",
-      "name": "تأثيرات الثلج",
-      "description": "تأثيرات ثلجية واقعية على كامل الموقع"
-    },
-    {
-      "key": "dark-mode",
-      "name": "الوضع الداكن",
-      "description": "تصميم داكن أنيق مع ألوان شتوية"
-    },
-    {
-      "key": "ajax-cart",
-      "name": "سلة تفاعلية",
-      "description": "إضافة المنتجات للسلة بدون إعادة تحميل"
-    },
-    {
-      "key": "wishlist",
-      "name": "المفضلة",
-      "description": "حفظ المنتجات المفضلة"
-    },
-    {
-      "key": "quick-view",
-      "name": "معاينة سريعة",
-      "description": "عرض تفاصيل المنتج في نافذة منبثقة"
-    },
-    {
-      "key": "responsive",
-      "name": "متجاوب",
-      "description": "تصميم متجاوب على جميع الأجهزة"
-    }
-  ],
-  "components": [
-    {
-      "key": "category-overlay-board",
-      "name": "لوحة الفئات التفاعلية",
-      "description": "عرض الفئات في لوحة تفاعلية"
-    },
-    {
-      "key": "products-slider",
-      "name": "عارض المنتجات",
-      "description": "عرض المنتجات بشكل منزلق"
-    },
-    {
-      "key": "testimonials",
-      "name": "آراء العملاء",
-      "description": "عرض تقييمات وآراء العملاء"
-    },
-    {
-      "key": "brands-slider",
-      "name": "عارض العلامات التجارية",
-      "description": "عرض العلامات التجارية المتوفرة"
-    },
-    {
-      "key": "main-links",
-      "name": "الروابط الرئيسية",
-      "description": "روابط سريعة للأقسام المهمة"
-    },
-    {
-      "key": "enhanced-slider",
-      "name": "سلايدر محسن",
-      "description": "عارض صور تفاعلي بتأثيرات متقدمة"
-    }
-  ]
+  "components": [],
+  "support_url": "https://salla.com/",
+  "description": {
+    "ar": "ثيم شتوي مع تأثير تساقط الثلج الحقيقي.",
+    "en": "Winter theme with realistic snowfall animation."
+  }
 }
