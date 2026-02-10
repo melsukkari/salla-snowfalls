@@ -1,0 +1,74 @@
+{# src/views/pages/product/_overlay.twig #}
+<div class="overlay-product-content" style="padding: 24px; max-height: 80vh; overflow-y: auto;">
+  <div class="product-header" style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 24px;">
+    <h2 style="font-size: 1.5rem; margin: 0;">{{ product.name }}</h2>
+    <button onclick="closeOverlay()" style="
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    ">&times;</button>
+  </div>
+
+  <div class="product-images" style="margin-bottom: 20px;">
+    {% if product.images|length > 1 %}
+      <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+        {% for image in product.images %}
+          <img src="{{ image.url }}" 
+               alt="{{ product.name }}"
+               style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; cursor: pointer;"
+               onclick="switchMainImage(this.src)">
+        {% endfor %}
+      </div>
+    {% endif %}
+    <img id="main-image" src="{{ product.featured_image.url }}" 
+         alt="{{ product.name }}"
+         style="width: 100%; max-width: 400px; border-radius: 12px;">
+  </div>
+
+  <div class="product-price" style="font-size: 1.4rem; font-weight: bold; color: #8A2BE2; margin: 16px 0;">
+    {{ product.price | money }}
+    {% if product.compare_at_price > product.price %}
+      <span style="text-decoration: line-through; color: #999; font-size: 1rem; margin-right: 8px;">
+        {{ product.compare_at_price | money }}
+      </span>
+    {% endif %}
+  </div>
+
+  {% if product.options|length > 0 %}
+    <div class="product-options" style="margin: 20px 0;">
+      {% for option in product.options %}
+        <div style="margin-bottom: 12px;">
+          <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ option.name }}:</label>
+          <select name="option_{{ option.id }}" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
+            {% for value in option.values %}
+              <option value="{{ value }}">{{ value }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <button class="btn-shop-now" 
+          style="background: #8A2BE2; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; width: 100%;"
+          onclick="window.location.href='{{ product.url }}'">
+    اشتر الآن
+  </button>
+</div>
+
+<script>
+  function switchMainImage(src) {
+    document.getElementById('main-image').src = src;
+  }
+  function closeOverlay() {
+    document.getElementById('product-overlay').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+</script>
