@@ -164,5 +164,48 @@
     <div id="overlay-content"></div>
   </div>
 </div>
+<script>
+  // Open product in overlay
+  function openProductOverlay(url) {
+    const overlay = document.getElementById('product-overlay');
+    const content = document.getElementById('overlay-content');
+    const loader = document.getElementById('overlay-loader');
+
+    overlay.style.display = 'flex';
+    loader.style.display = 'block';
+    content.style.display = 'none';
+    document.body.style.overflow = 'hidden';
+
+    // Fetch only the overlay content
+    fetch(url + '?view=overlay')
+      .then(res => res.text())
+      .then(html => {
+        content.innerHTML = html;
+        loader.style.display = 'none';
+        content.style.display = 'block';
+      })
+      .catch(err => {
+        content.innerHTML = '<p style="color:red; text-align:center; padding:40px;">Error loading product.</p>';
+        loader.style.display = 'none';
+        content.style.display = 'block';
+      });
+  }
+
+  // Close on ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.getElementById('product-overlay').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Close on backdrop click
+  document.getElementById('product-overlay').addEventListener('click', (e) => {
+    if (e.target.id === 'product-overlay') {
+      e.target.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  });
+</script>
 </body>
 </html>
