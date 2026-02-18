@@ -5,42 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     
-    {# SEO Meta Tags #}
+    {# ===== SEO Meta Tags ===== #}
     <title>{{ page.title }} - {{ store.name }}</title>
     <meta name="description" content="{{ page.description|default(store.description) }}">
     <meta name="keywords" content="{{ page.keywords|default(store.keywords) }}">
     
-    {# Open Graph #}
+    {# ===== Open Graph ===== #}
     <meta property="og:title" content="{{ page.title }} - {{ store.name }}">
     <meta property="og:description" content="{{ page.description|default(store.description) }}">
     <meta property="og:image" content="{{ store.logo }}">
     <meta property="og:url" content="{{ page.url }}">
     <meta property="og:type" content="website">
     
-    {# Twitter Card #}
+    {# ===== Twitter Card ===== #}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ page.title }} - {{ store.name }}">
     <meta name="twitter:description" content="{{ page.description|default(store.description) }}">
     <meta name="twitter:image" content="{{ store.logo }}">
     
-    {# Favicon #}
+    {# ===== Favicon ===== #}
     <link rel="icon" type="image/png" href="{{ store.favicon }}">
     <link rel="apple-touch-icon" href="{{ store.logo }}">
     
-    {# Fonts #}
+    {# ===== Fonts ===== #}
     {% if theme.settings.get('font') %}
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family={{ theme.settings.get('font')|replace({' ': '+'}) }}:wght@400;500;600;700&display=swap" rel="stylesheet">
     {% endif %}
     
-    {# Theme Styles #}
+    {# ===== Theme Styles (Winter Overlay) ===== #}
+    {# ✅ FIXED: Path now matches Laravel Mix output: public/css/winter-overlay.css #}
     <link rel="stylesheet" href="{{ 'css/winter-overlay.css' | asset }}">
     
-    {# Salla Core Styles #}
-    <link rel="stylesheet" href="{{ 'app.css' | asset }}">
+    {# ===== Salla Core Styles ===== #}
+    {# ✅ FIXED: Path now matches Laravel Mix output: public/css/app.css #}
+    <link rel="stylesheet" href="{{ 'css/app.css' | asset }}">
     
-    {# Custom CSS Variables from Theme Settings #}
+    {# ===== Custom CSS Variables from Theme Settings ===== #}
     <style>
         :root {
             --primary-color: {{ theme.settings.get('primary_color', '#8A2BE2') }};
@@ -59,34 +61,34 @@
         {% endif %}
     </style>
     
-    {# Additional Head Content #}
+    {# ===== Additional Head Content ===== #}
     {% block head %}{% endblock %}
     
-    {# Salla Analytics #}
+    {# ===== Salla Analytics ===== #}
     {{ salla.head }}
 </head>
 
 <body class="{{ page.slug }}">
-    {# Salla Body Scripts #}
+    {# ===== Salla Body Scripts ===== #}
     {{ salla.body }}
     
-    {# Header Component #}
+    {# ===== Header Component ===== #}
     {% component 'header.header' %}
     
-    {# Main Content #}
-    <main class="site-content">
+    {# ===== Main Content ===== #}
+    <main class="site-content" id="main-content">
         {% block content %}{% endblock %}
     </main>
     
-    {# Footer Component #}
+    {# ===== Footer Component ===== #}
     {% component 'footer.footer' %}
     
-    {# Category Overlay Board Component #}
+    {# ===== Category Overlay Board Component ===== #}
     {% if theme.settings.get('enable_overlay_navigation', true) %}
         {% component 'home.category-overlay-board' %}
     {% endif %}
     
-    {# Pass theme settings to JavaScript #}
+    {# ===== Pass Theme Settings to JavaScript ===== #}
     <script>
         window.THEME_SETTINGS = {
             primaryColor: '{{ theme.settings.get('primary_color', '#8A2BE2') }}',
@@ -107,26 +109,28 @@
         window.SNOW_INTENSITY = {{ theme.settings.get('snow_intensity', 120) }};
     </script>
     
-    {# Salla Core JavaScript #}
-    <script defer src="{{ 'app.js' | asset }}"></script>
+    {# ===== Salla Core JavaScript ===== #}
+    {# ✅ FIXED: Path now matches Laravel Mix output: public/js/app.js #}
+    <script defer src="{{ 'js/app.js' | asset }}"></script>
     
-    {# Overlay Board System #}
+    {# ===== Overlay Board System ===== #}
     {% if theme.settings.get('enable_overlay_navigation', true) %}
+        {# ✅ Path already correct: public/js/overlay-board.js #}
         <script defer src="{{ 'js/overlay-board.js' | asset }}"></script>
     {% endif %}
     
-    {# Snow Waterfall Effect #}
+    {# ===== Snow Waterfall Effect ===== #}
     {% if theme.settings.get('enable_snow', true) %}
+        {# ✅ Path already correct: public/js/snow-waterfall.js #}
         <script defer src="{{ 'js/snow-waterfall.js' | asset }}"></script>
     {% endif %}
     
-    {# Additional Scripts #}
+    {# ===== Additional Scripts ===== #}
     {% block scripts %}{% endblock %}
     
-    {# Cart Drawer (Salla Native) #}
+    {# ===== Cart Drawer (Salla Native) ===== #}
     {% if theme.settings.get('enable_cart_drawer', true) %}
         <script>
-            // Initialize Salla Cart Drawer
             if (window.salla) {
                 salla.event.cart.updated(() => {
                     console.log('Cart updated');
@@ -135,77 +139,77 @@
         </script>
     {% endif %}
     
-    {# Accessibility: Skip to Content Link #}
+    {# ===== Accessibility: Skip to Content Link ===== #}
     <a href="#main-content" class="skip-to-content" style="position: absolute; left: -9999px; z-index: 999;">
         {{ trans('common.skip_to_content') }}
     </a>
-<!-- Product Overlay Container -->
-<div id="product-overlay" style="
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.85);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 10000;
-">
-  <div style="
-    width: 90%; max-width: 900px;
-    height: 90%; max-height: 800px;
-    background: #121212;
-    border-radius: 16px;
-    overflow: hidden;
-    position: relative;
-  ">
-    <div id="overlay-loader" style="text-align: center; padding: 40px; color: #fff;">
-      Loading...
+
+    {# ===== Product Overlay Container (Your Custom Feature) ===== #}
+    <div id="product-overlay" style="
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+    ">
+      <div style="
+        width: 90%; max-width: 900px;
+        height: 90%; max-height: 800px;
+        background: #121212;
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+      ">
+        <div id="overlay-loader" style="text-align: center; padding: 40px; color: #fff;">
+          Loading...
+        </div>
+        <div id="overlay-content"></div>
+      </div>
     </div>
-    <div id="overlay-content"></div>
-  </div>
-</div>
-<script>
-  // Open product in overlay
-  function openProductOverlay(url) {
-    const overlay = document.getElementById('product-overlay');
-    const content = document.getElementById('overlay-content');
-    const loader = document.getElementById('overlay-loader');
+    <script>
+      // Open product in overlay
+      function openProductOverlay(url) {
+        const overlay = document.getElementById('product-overlay');
+        const content = document.getElementById('overlay-content');
+        const loader = document.getElementById('overlay-loader');
 
-    overlay.style.display = 'flex';
-    loader.style.display = 'block';
-    content.style.display = 'none';
-    document.body.style.overflow = 'hidden';
+        overlay.style.display = 'flex';
+        loader.style.display = 'block';
+        content.style.display = 'none';
+        document.body.style.overflow = 'hidden';
 
-    // Fetch only the overlay content
-    fetch(url + '?view=overlay')
-      .then(res => res.text())
-      .then(html => {
-        content.innerHTML = html;
-        loader.style.display = 'none';
-        content.style.display = 'block';
-      })
-      .catch(err => {
-        content.innerHTML = '<p style="color:red; text-align:center; padding:40px;">Error loading product.</p>';
-        loader.style.display = 'none';
-        content.style.display = 'block';
+        fetch(url + '?view=overlay')
+          .then(res => res.text())
+          .then(html => {
+            content.innerHTML = html;
+            loader.style.display = 'none';
+            content.style.display = 'block';
+          })
+          .catch(err => {
+            content.innerHTML = '<p style="color:red; text-align:center; padding:40px;">Error loading product.</p>';
+            loader.style.display = 'none';
+            content.style.display = 'block';
+          });
+      }
+
+      // Close on ESC
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          document.getElementById('product-overlay').style.display = 'none';
+          document.body.style.overflow = '';
+        }
       });
-  }
 
-  // Close on ESC
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      document.getElementById('product-overlay').style.display = 'none';
-      document.body.style.overflow = '';
-    }
-  });
-
-  // Close on backdrop click
-  document.getElementById('product-overlay').addEventListener('click', (e) => {
-    if (e.target.id === 'product-overlay') {
-      e.target.style.display = 'none';
-      document.body.style.overflow = '';
-    }
-  });
-</script>
+      // Close on backdrop click
+      document.getElementById('product-overlay').addEventListener('click', (e) => {
+        if (e.target.id === 'product-overlay') {
+          e.target.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+      });
+    </script>
 </body>
 </html>
