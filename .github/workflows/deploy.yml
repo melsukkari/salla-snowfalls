@@ -1,0 +1,33 @@
+name: Deploy to Salla
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build theme
+        run: npm run production
+      
+      - name: Deploy to Salla
+        uses: salla-app/salla-deploy-action@v1
+        with:
+          theme-id: ${{ secrets.SALLA_THEME_ID }}
+          auth-token: ${{ secrets.SALLA_AUTH_TOKEN }}
