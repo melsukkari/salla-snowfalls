@@ -1,0 +1,20 @@
+{
+  "name": "Auction House Theme",
+  "version": "1.0.0",
+  "author": "Mohammed Al-Sugari",
+  "description": "Premium auction-style theme with full-screen overlays and immersive product viewing",
+  "engine": "twilight",
+  "features": {
+    "overlay_navigation": true,
+    "360_product_viewer": true,
+    "auction_interface": true,
+    "fullscreen_transitions": true
+  },
+  "settings": {
+    "primary_color": "#1a1a2e",
+    "secondary_color": "#16213e",
+    "accent_color": "#e94560",
+    "font_family": "Cairo, sans-serif",
+    "layout_style": "immersive-overlay"
+  }
+}
