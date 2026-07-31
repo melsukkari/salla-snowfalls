@@ -33,7 +33,12 @@ module.exports = {
             colors             : {
                 'dark'         : '#1D1F1F',
                 'darker'       : '#0E0F0F',
-                'danger'       : '#AE0A0A'
+                'danger'       : '#AE0A0A',
+                // Alias for @salla.sa/twilight-tailwind-theme's utilities.json, which
+                // references `text-primary-dark` / `fill-primary-dark` even though the
+                // package's own color palette only registers the key as `primary-d`.
+                // Without this alias, Tailwind fails to build those built-in utility classes.
+                'primary-dark' : 'var(--color-primary-dark)',
             },
             spacing: {
               '3.75': '15px',
