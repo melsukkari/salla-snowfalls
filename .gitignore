@@ -1,24 +1,4 @@
 ```
-# Directories
-salla-snowfalls/
-salla-snowfall/
-
-# Logs and temporary files
-*.log
-*.tmp
-*.swp
-
-# Environment files
-.env
-.env.local
-*.env.*
-
-# Editor/IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
 # Dependencies
 node_modules/
 .venv/
@@ -26,29 +6,43 @@ venv/
 __pycache__/
 .mypy_cache/
 .pytest_cache/
-
-# Build artifacts
-dist/
-build/
 target/
+.gradle/
+
+# Compiled/Binary files
 *.pyc
 *.class
 *.o
-*.obj
 *.exe
 *.dll
 *.so
 *.a
+*.obj
 *.out
+*.log
+*.tmp
 
-# System files
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# System/Environment files
 .DS_Store
 Thumbs.db
+.env
+.env.local
+*.env.*
 
-# Coverage reports
+# Coverage
 coverage/
 htmlcov/
 .coverage
+
+# Build/dist directories
+dist/
+build/
 
 # Compressed files
 *.zip
