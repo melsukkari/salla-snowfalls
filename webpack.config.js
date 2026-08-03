@@ -18,7 +18,9 @@ module.exports = {
         pages   : [asset('js/loyalty.js'), asset('js/brands.js'),],
         product : [asset('js/product.js'), asset('js/products.js')],
         order   : asset('js/order.js'),
-        testimonials   : asset('js/testimonials.js')
+        testimonials   : asset('js/testimonials.js'),
+        'snow-waterfall': asset('js/snow-waterfall.js'),
+        'winter-overlay': asset('css/winter-overlay.css')
     },
     output : {
         path: public(),
