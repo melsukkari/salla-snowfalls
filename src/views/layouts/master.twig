@@ -35,12 +35,10 @@
     {% endif %}
     
     {# ===== Theme Styles (Winter Overlay) ===== #}
-    {# ✅ FIXED: Path now matches Laravel Mix output: public/css/winter-overlay.css #}
-    <link rel="stylesheet" href="{{ 'css/winter-overlay.css' | asset }}">
+    <link rel="stylesheet" href="{{ 'winter-overlay.css' | asset }}">
     
     {# ===== Salla Core Styles ===== #}
-    {# ✅ FIXED: Path now matches Laravel Mix output: public/css/app.css #}
-    <link rel="stylesheet" href="{{ 'css/app.css' | asset }}">
+    <link rel="stylesheet" href="{{ 'app.css' | asset }}">
     
     {# ===== Custom CSS Variables from Theme Settings ===== #}
     <style>
@@ -110,19 +108,17 @@
     </script>
     
     {# ===== Salla Core JavaScript ===== #}
-    {# ✅ FIXED: Path now matches Laravel Mix output: public/js/app.js #}
-    <script defer src="{{ 'js/app.js' | asset }}"></script>
+    <script defer src="{{ 'app.js' | asset }}"></script>
     
     {# ===== Overlay Board System ===== #}
     {% if theme.settings.get('enable_overlay_navigation', true) %}
-        {# ✅ Path already correct: public/js/overlay-board.js #}
-        <script defer src="{{ 'js/overlay-board.js' | asset }}"></script>
+        <script defer src="{{ 'overlay-board.js' | asset }}"></script>
+        <script defer src="{{ 'overlay-manager.js' | asset }}"></script>
     {% endif %}
     
     {# ===== Snow Waterfall Effect ===== #}
     {% if theme.settings.get('enable_snow', true) %}
-        {# ✅ Path already correct: public/js/snow-waterfall.js #}
-        <script defer src="{{ 'js/snow-waterfall.js' | asset }}"></script>
+        <script defer src="{{ 'snow-waterfall.js' | asset }}"></script>
     {% endif %}
     
     {# ===== Additional Scripts ===== #}
