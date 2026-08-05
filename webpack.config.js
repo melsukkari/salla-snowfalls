@@ -20,7 +20,9 @@ module.exports = {
         order   : asset('js/order.js'),
         testimonials   : asset('js/testimonials.js'),
         'snow-waterfall': asset('js/snow-waterfall.js'),
-        'winter-overlay': asset('css/winter-overlay.css')
+        'winter-overlay': asset('css/winter-overlay.css'),
+        'overlay-board': asset('js/overlay-board.js'),
+        'overlay-manager': asset('js/overlay-manager.js')
     },
     output : {
         path: public(),

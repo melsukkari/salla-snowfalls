@@ -1,50 +1,46 @@
 ```
 # Dependencies
 node_modules/
-.venv/
-venv/
-__pycache__/
-.mypy_cache/
-.pytest_cache/
+
+# Build artifacts
+dist/
+build/
 target/
-.gradle/
 
-# Compiled/Binary files
+# Python
+__pycache__/
 *.pyc
-*.class
-*.o
-*.exe
-*.dll
-*.so
-*.a
-*.obj
-*.out
-*.log
-*.tmp
-
-# Editor/IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# System/Environment files
-.DS_Store
-Thumbs.db
+*.pyo
+*.pyd
+*.py.class
+.Python
+env/
+venv/
+.venv/
 .env
 .env.local
-*.env.*
+.env.*
+
+# Logs
+*.log
 
 # Coverage
 coverage/
 htmlcov/
 .coverage
 
-# Build/dist directories
-dist/
-build/
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
 
-# Compressed files
+# OS
+.DS_Store
+Thumbs.db
+
+# Compressed
 *.zip
 *.gz
 *.tar
@@ -63,8 +59,14 @@ build/
 *.Z
 *.lz
 *.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+
+# MyPy
+.mypy_cache/
+
+# Pytest
+.pytest_cache/
+
+# Webpack
+webpack.config.js
+
 ```
