@@ -242,16 +242,17 @@
             "required": false,
             "value": true,
             "selected": true,
-            "public": true
+            "public": true,
+            "description": "l o v e"
         },
         {
             "type": "number",
             "id": "snow_particle_count",
             "label": "عدد بلورات الثلج",
             "format": "integer",
-            "value": 150,
+            "value": 1800,
             "minimum": 30,
-            "maximum": 150
+            "maximum": "3250"
         }
     ],
     "components": [],
