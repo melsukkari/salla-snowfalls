@@ -102,6 +102,19 @@ input double InpRunnerTrailStart   = 1.6;     // runner trail start (H1 ATR)
 input double InpRunnerTrailDist    = 1.0;     // runner trail distance (H1 ATR)
 input int    InpRunnerMaxHours     = 48;      // close a runner not in profit after this long
 
+input group "=== SPIDER NET (David Star: bidirectional net centred on price) ==="
+input bool   InpSpiderMode         = true;    // ON = symmetric net replaces the one-direction ladder
+input int    InpSpiderRings        = 3;       // rings of 4 orders (auto-clamped to the free circle slots)
+input double InpSpiderStepATR      = 0.50;    // step S between levels, in ATR (floored by broker min distance)
+input bool   InpSpiderSymmetric    = true;    // false = trend-weighted: only with-trend orders + the reverse stop
+input bool   InpSLAsReverse        = true;    // no tight SL: the opposite stop order IS the stop-and-reverse
+input double InpSpiderCatSL_ATR    = 3.0;     // catastrophe SL only (0 = none) - hard backstop behind the reverse stop
+input double InpSpiderTP_S         = 1.0;     // each cell's TP, in steps S
+input double InpSpiderCellUSD      = 1.50;    // winning cell banks at this $ profit (0 = off)
+input double InpSpiderVaultUSD     = 10.0;    // whole-net profit: bank every cell and re-centre
+input double InpSpiderRecenterS    = 1.0;     // re-centre the pending net when price drifts this many S from the anchor
+input bool   InpSpiderCore         = true;    // use spare slot for a market "core" cell in the tick direction
+
 input group "=== Circle of 13 (slot allocation, total capped at 13) ==="
 input int    InpMarketSlots        = 1;       // instant-entry positions
 input int    InpStopSlots          = 6;       // breakout stop ladder
@@ -201,6 +214,7 @@ int      hE50[3], hE200[3];
 int      hE21H1 = INVALID_HANDLE, hATRH1 = INVALID_HANDLE;
 double   g_e50[3], g_e200[3], g_atrH1 = 0, g_h1Hi = 0, g_h1Lo = 0, g_h1E21 = 0;
 datetime g_lastRunner = 0;
+double   g_anchor = 0;
 double   g_dayStartBal = 0, g_peakEq = 0, g_basketPeak = 0;
 bool     g_halted = false;
 int      g_nMarket = 1, g_nStop = 6, g_nLimit = 6;
@@ -289,7 +303,7 @@ void OnTick()
    EvaluateVotes();
 
    // opposite consensus => flatten the net, then wait
-   if(InpUseOppositeFlatten && !InpTickScalpMode && g_dir != 0)
+   if(InpUseOppositeFlatten && !InpTickScalpMode && !InpSpiderMode && g_dir != 0)
      {
       int held = HeldDirection();
       if(held != 0 && held == -g_dir)
@@ -298,6 +312,18 @@ void OnTick()
          g_cooldownUntil = TimeCurrent() + InpCooldownSec;
          Panel(); return;
         }
+     }
+
+   // spider net: bidirectional, replaces the single-direction strike below
+   if(InpSpiderMode)
+     {
+      if(GatesPass())
+        {
+         if(g_dir != 0) TryRunner(g_dir);
+         SpiderCycle();
+        }
+      Panel();
+      return;
      }
 
    // pendings pointing the wrong way are removed as soon as direction is known
@@ -807,6 +833,128 @@ void SLTP(double ref, bool isBuy, double &sl, double &tp)
    else tp = 0;
   }
 
+//====================================================================
+// SPIDER NET - per ring j (S = step):
+//   SELL LIMIT @ anchor + (1.5+j)S   BUY STOP  @ anchor + (0.5+j)S
+//   ---------------------- anchor ----------------------
+//   SELL STOP  @ anchor - (0.5+j)S   BUY LIMIT @ anchor - (1.5+j)S
+// A filled BUY STOP is protected by the SELL STOP below it (and vice
+// versa): the opposite stop order is the stop-and-reverse, so no tight
+// SL is needed. The side that wins is banked per cell, and the net
+// re-centres on the new price.
+//====================================================================
+bool PositionNear(bool isBuy, double px, double tol)
+  {
+   for(int i = PositionsTotal() - 1; i >= 0; i--)
+     {
+      if(PositionGetTicket(i) == 0 || !Mine(true) || IsRunner()) continue;
+      bool b = (PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_BUY);
+      if(b == isBuy && MathAbs(PositionGetDouble(POSITION_PRICE_OPEN) - px) <= tol) return(true);
+     }
+   return(false);
+  }
+
+void SpiderSLTP(double ref, bool isBuy, double S, double md, double &sl, double &tp)
+  {
+   sl = 0;
+   if(InpSpiderCatSL_ATR > 0)
+     {
+      double sd = MathMax(g_atr * InpSpiderCatSL_ATR, md * 2.0);
+      sl = NormalizeDouble(isBuy ? ref - sd : ref + sd, Dg());
+     }
+   else if(!InpSLAsReverse)
+     {
+      double t;
+      SLTP(ref, isBuy, sl, t);
+     }
+   double td = MathMax(InpSpiderTP_S * S, md);
+   tp = NormalizeDouble(isBuy ? ref + td : ref - td, Dg());
+  }
+
+bool PlaceSpider(ENUM_ORDER_TYPE ty, double px, double lot, double S, double md, datetime exp)
+  {
+   bool isBuy = (ty == ORDER_TYPE_BUY_STOP || ty == ORDER_TYPE_BUY_LIMIT);
+   double sl, tp;
+   SpiderSLTP(px, isBuy, S, md, sl, tp);
+   string c = InpComment + "_SP";
+   switch(ty)
+     {
+      case ORDER_TYPE_BUY_STOP:   return(trade.BuyStop(lot, px, _Symbol, sl, tp, ORDER_TIME_SPECIFIED, exp, c));
+      case ORDER_TYPE_SELL_LIMIT: return(trade.SellLimit(lot, px, _Symbol, sl, tp, ORDER_TIME_SPECIFIED, exp, c));
+      case ORDER_TYPE_SELL_STOP:  return(trade.SellStop(lot, px, _Symbol, sl, tp, ORDER_TIME_SPECIFIED, exp, c));
+      case ORDER_TYPE_BUY_LIMIT:  return(trade.BuyLimit(lot, px, _Symbol, sl, tp, ORDER_TIME_SPECIFIED, exp, c));
+     }
+   return(false);
+  }
+
+void SpiderCycle()
+  {
+   if(g_atr <= 0) return;
+   datetime now = TimeCurrent();
+   if(now - g_lastDeploy < InpDeployEverySec) return;
+   g_lastDeploy = now;
+
+   double bid = Bid(), ask = Ask(), mid = (bid + ask) * 0.5;
+   double md  = MinDist();
+   double S   = MathMax(InpSpiderStepATR * g_atr, md * 2.0);
+
+   // re-centre: the pending net follows price, open cells stay where they are
+   if(g_anchor == 0 || MathAbs(mid - g_anchor) > InpSpiderRecenterS * S)
+     {
+      DeleteAllPendings();
+      g_anchor = mid;
+     }
+
+   int runners = CountRunners();
+   int reserve = (InpUseRunners && InpUseHTFBias) ? MathMax(0, InpRunnerSlots - runners) : 0;
+   int slots   = MAX_CIRCLE - CountPositions() - CountPendings() - reserve;
+   if(slots <= 0) return;
+
+   double lot = SlotLot(MathMax(g_atr * MathMax(InpSpiderCatSL_ATR, 1.0), md));
+   datetime exp = now + InpPendingExpirySec;
+   double tol = S * 0.3;
+
+   // core cell: market entry in the tick direction
+   if(InpSpiderCore && g_dir != 0 && slots > 0 && now - g_lastMarket >= (InpTickScalpMode ? 1 : InpMarketGapSec) &&
+      CountPositions(g_dir) - runners <= 0)
+     {
+      bool isBuy = (g_dir > 0);
+      double ref = isBuy ? ask : bid, sl, tp;
+      SpiderSLTP(ref, isBuy, S, md, sl, tp);
+      bool ok = isBuy ? trade.Buy(lot, _Symbol, ask, sl, tp, InpComment + "_SPC")
+                      : trade.Sell(lot, _Symbol, bid, sl, tp, InpComment + "_SPC");
+      if(ok) { g_lastMarket = now; slots--; }
+     }
+
+   int rings = MathMax(1, MathMin(InpSpiderRings, 3));
+   for(int j = 0; j < rings && slots > 0; j++)
+     {
+      double offStop = (0.5 + j) * S, offLim = (1.5 + j) * S;
+      bool skipSellLimit = (!InpSpiderSymmetric && g_dir > 0);
+      bool skipBuyLimit  = (!InpSpiderSymmetric && g_dir < 0);
+      bool skipSellStop  = (!InpSpiderSymmetric && g_dir > 0 && j > 0);
+      bool skipBuyStop   = (!InpSpiderSymmetric && g_dir < 0 && j > 0);
+
+      double px;
+      // SELL LIMIT (above)
+      px = NormalizeDouble(g_anchor + offLim, Dg());
+      if(slots > 0 && !skipSellLimit && px >= bid + md && !OrderNear(ORDER_TYPE_SELL_LIMIT, px, tol) && !PositionNear(false, px, tol))
+         if(PlaceSpider(ORDER_TYPE_SELL_LIMIT, px, lot, S, md, exp)) slots--;
+      // BUY STOP (above)
+      px = NormalizeDouble(g_anchor + offStop, Dg());
+      if(slots > 0 && !skipBuyStop && px >= ask + md && !OrderNear(ORDER_TYPE_BUY_STOP, px, tol) && !PositionNear(true, px, tol))
+         if(PlaceSpider(ORDER_TYPE_BUY_STOP, px, lot, S, md, exp)) slots--;
+      // SELL STOP (below)
+      px = NormalizeDouble(g_anchor - offStop, Dg());
+      if(slots > 0 && !skipSellStop && px <= bid - md && !OrderNear(ORDER_TYPE_SELL_STOP, px, tol) && !PositionNear(false, px, tol))
+         if(PlaceSpider(ORDER_TYPE_SELL_STOP, px, lot, S, md, exp)) slots--;
+      // BUY LIMIT (below)
+      px = NormalizeDouble(g_anchor - offLim, Dg());
+      if(slots > 0 && !skipBuyLimit && px <= ask - md && !OrderNear(ORDER_TYPE_BUY_LIMIT, px, tol) && !PositionNear(true, px, tol))
+         if(PlaceSpider(ORDER_TYPE_BUY_LIMIT, px, lot, S, md, exp)) slots--;
+     }
+  }
+
 void Strike(int dir)
   {
    if(g_atr <= 0) return;
@@ -896,10 +1044,11 @@ void ManagePositions()
       double trD = run ? InpRunnerTrailDist : InpTrailDistATR;
 
       // SWALLOW: bank the profit the instant it appears
-      if(!run && (InpTickScalpMode || InpQuickBankUSD > 0 || InpQuickBankPoints > 0))
+      double bankUSD = InpSpiderMode ? InpSpiderCellUSD : InpQuickBankUSD;
+      if(!run && (InpTickScalpMode || InpSpiderMode || bankUSD > 0 || InpQuickBankPoints > 0))
         {
          double usd = PositionGetDouble(POSITION_PROFIT) + PositionGetDouble(POSITION_SWAP);
-         if((InpQuickBankUSD > 0 && usd >= InpQuickBankUSD) ||
+         if((bankUSD > 0 && usd >= bankUSD) ||
             (InpQuickBankPoints > 0 && prof >= InpQuickBankPoints * pt))
            { trade.PositionClose(tk); continue; }
         }
@@ -943,8 +1092,8 @@ void ManageBasket()
    double fp = Floating(true);
    if(fp > g_basketPeak) g_basketPeak = fp;
 
-   if(InpUseBasketHardTP && fp >= InpBasketHardTP)
-     { FlattenAll("basket hard target", true); g_cooldownUntil = TimeCurrent() + InpCooldownSec; return; }
+   if(InpUseBasketHardTP && fp >= (InpSpiderMode ? InpSpiderVaultUSD : InpBasketHardTP))
+     { FlattenAll("basket hard target", true); g_anchor = 0; g_cooldownUntil = TimeCurrent() + InpCooldownSec; return; }
 
    if(InpUseBasketRatchet && g_basketPeak >= InpBasketRatchetStart &&
       fp <= g_basketPeak * (1.0 - InpBasketGiveBackPct / 100.0))
@@ -967,12 +1116,13 @@ void Panel()
       "Circle: %d pos + %d pend / 13  [M%d S%d L%d]\n"
       "Votes  bull %d | bear %d  -> %s (need %d)\n"
       "ATR %.0f pts | ER %.2f | ADX %.1f | RSI %.1f | Spread %.0f\n"
-      "HTF bull %d/3 | bear %d/3 | H1 ATR %.0f | Runners %d/%d\nGate: %s\n",
+      "HTF bull %d/3 | bear %d/3 | H1 ATR %.0f | Runners %d/%d\nSpider anchor %.2f | Mode: %s\nGate: %s\n",
       AccountInfoDouble(ACCOUNT_BALANCE), AccountInfoDouble(ACCOUNT_EQUITY), Floating(), g_basketPeak,
       CountPositions(), CountPendings(), g_nMarket, g_nStop, g_nLimit,
       g_bullVotes, g_bearVotes, dirTxt, InpMinVotes,
       g_atr / Pt(), g_er, g_adx, g_rsi, SpreadPts(),
       HTFScore(1), HTFScore(-1), g_atrH1 / Pt(), CountRunners(), InpRunnerSlots,
+      g_anchor, InpSpiderMode ? "SPIDER NET" : "ladder",
       g_gateMsg));
   }
 //+------------------------------------------------------------------+
