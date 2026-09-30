@@ -1,211 +1,140 @@
+{# ############## Shared Variables in all views ################
+| Variable                                           | Type     | Description                                                                                              |
+|----------------------------------------------------|----------|----------------------------------------------------------------------------------------------------------|
+| store                                              | Store    |                                                                                                          |
+| store.id                                           | int      |                                                                                                          |
+| store.name                                         | string   |                                                                                                          |
+| store.username                                     | string   |                                                                                                          |
+| store.description                                  | string   |                                                                                                          |
+| store.slogan                                       | ?string  | * if feature in twilight.json                                                                            |
+| store.logo                                         | string   |                                                                                                          |
+| store.url                                          | string   |                                                                                                          |
+| store.api                                          | string   | the api url for current store                                                                            |
+| store.icon                                         | string   | *fav icon url                                                                                            |
+| store.contacts                                     | object   | [mobile, phone, email, whatsapp, telegram], ex. store.contacts.email                                     |
+| store.social                                       | object   | [instagram, snapchat, twitter, youtube, facebook, pinterest, maroof, whatsapp], ex. store.social.twitter |
+| store.settings                                     | object   |                                                                                                          |
+| store.settings.auth.email_allowed                  | bool     |                                                                                                          |
+| store.settings.auth.mobile_allowed                 | bool     |                                                                                                          |
+| store.settings.auth.is_email_required              | bool     |                                                                                                          |
+| store.settings.cart.apply_coupon_enabled           | bool     | Does visitor allowed to applay coupon in cart page                                                       |
+| store.settings.product.total_sold_enabled          | bool     |                                                                                                          |
+| store.settings.product.fit_type                    | ?string  | null when equal product card size is off, or ['cover', 'contain']                                        |
+| store.settings.category.testimonial_enabled        | bool     | Show random testimonials in category page                                                                |
+| store.settings.tax.number                          | ?string  |                                                                                                          |
+| store.settings.tax.certificate                     | ?string  | certificate image url                                                                                    |
+| store.settings.tax.taxable_prices_enabled          | bool     | Does tax included in the prices ex product_price 100 & tax is 15, price will be 115                      |
+| store.settings.rating_enabled                      | bool     | Is one of: store_enabled or shipping_enabled or products_enabled                                         |
+| store.settings.arabic_numbers_enabled              | bool     | Does the merchant wants the numbers to be shown as Arabic format                                         |
+| store.settings.is_multilingual                     | bool     |                                                                                                          |
+| store.settings.currencies_enabled                  | bool     |     
+| theme                                              | Theme    |                                                                                                          |
+| theme.id                                           | int      |                                                                                                          |
+| theme.name                                         | string   |                                                                                                          |
+| theme.mode                                         | string   | `live`, `preview`                                                                                        |
+| theme.is_rtl                                       | bool     |                                                                                                          |
+| theme.translations_hash                            | int      | to be used in case merchant updated frontend store translations                                          |
+| theme.color                                        | object   |                                                                                                          |
+| theme.color.primary                                | string   |                                                                                                          |
+| theme.color.text                                   | string   | suitable text color comparing to `theme.primary.color`, #000000, #FFFFFF                                 |
+| theme.color.reverse_primary                        | string   |                                                                                                          |
+| theme.color.reverse_text                           | string   | if `theme.text_color=#000000` means that `theme.reverse_text_color=#FFFFFF`                              |
+| theme.color.is_dark                                | bool     | Does main store color `theme.primary.color` considered as dim color?                                     |
+| theme.color.darker(float alpha, ?string hexColor)  | string   | get darker color from `theme.primary.color` or from passed color, `alpha` range from 0.0-1.0             |
+| theme.color.lighter(float alpha, ?string hexColor) | string   | get lighter color from `theme.primary.color` or from passed color, `alpha` range from 0.0-1.0            |
+| theme.font                                         | ?object  | Salla predefined font, null when the theme doesn't have `fonts` feature                                  |
+| theme.font.name                                    | string   | DINNextLTArabic-Regular, Amazon-Ember, Apple, Dubai, Estedad                                             |
+| theme.font.url                                     | string   | css full url ex: 'https://my_store.test/dist/fonts/default.css'                                          |
+| theme.settings                                     | object   | dynamic object with values of the `settings` in twilight.json ex. `theme.settings.topnav_is_dark`        |
+| theme.settings.set(settingName, value)             | string   | set global var, then get it {{theme.settings.get('my_var','fallback') }}                                 |
+| theme.settings.get(settingName, default=null)      | mixed    | get theme setting ex `theme.settings.get('my_var', 'fallback')`                                          |
+#}
 <!DOCTYPE html>
 <html lang="{{ user.language.code }}" dir="{{ user.language.dir }}">
+<!-- بسم الله الرحمن الرحيم -->
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{ theme.settings.set('placeholder', 'images/placeholder.png') }}
+
+    {% include 'pages.partials.loading-screen-assets' %}
+
+    <script defer data-cfasync="false" src="{{ 'product-card.js'|asset }}"></script>
+    <script defer src="{{ 'main-menu.js'|asset }}"></script>
+
+    {% block head_scripts %}{% endblock %}
+
+
+    <script data-cfasync="false">
+        window.header_is_sticky = "{{theme.settings.get('header_is_sticky', 'Default Value')}}"
+        window.imageZoom = "{{theme.settings.get('imageZoom')}}"
+        window.can_access_wallet = {{ user.can_access_wallet | json_encode }}
+        window.SNOW_INTENSITY = {{ theme.settings.get('snow_particle_count', 120) | default(120) | json_encode }}
+        window.ENABLE_OVERLAY_NAVIGATION = {{ theme.settings.get('enable_overlay_navigation') ? 'true' : 'false' }}
+    </script>
     
-    {# ===== SEO Meta Tags ===== #}
-    <title>{{ page.title }} - {{ store.name }}</title>
-    <meta name="description" content="{{ page.description|default(store.description) }}">
-    <meta name="keywords" content="{{ page.keywords|default(store.keywords) }}">
-    
-    {# ===== Open Graph ===== #}
-    <meta property="og:title" content="{{ page.title }} - {{ store.name }}">
-    <meta property="og:description" content="{{ page.description|default(store.description) }}">
-    <meta property="og:image" content="{{ store.logo }}">
-    <meta property="og:url" content="{{ page.url }}">
-    <meta property="og:type" content="website">
-    
-    {# ===== Twitter Card ===== #}
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ page.title }} - {{ store.name }}">
-    <meta name="twitter:description" content="{{ page.description|default(store.description) }}">
-    <meta name="twitter:image" content="{{ store.logo }}">
-    
-    {# ===== Favicon ===== #}
-    <link rel="icon" type="image/png" href="{{ store.favicon }}">
-    <link rel="apple-touch-icon" href="{{ store.logo }}">
-    
-    {# ===== Fonts ===== #}
-    {% if theme.settings.get('font') %}
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family={{ theme.settings.get('font')|replace({' ': '+'}) }}:wght@400;500;600;700&display=swap" rel="stylesheet">
-    {% endif %}
-    
-    {# ===== Theme Styles (Winter Overlay) ===== #}
-    <link rel="stylesheet" href="{{ 'winter-overlay.css' | asset }}">
-    
-    {# ===== Salla Core Styles ===== #}
+    {% hook 'head:start' %}
+    {% hook head %}
+    {% block styles %}{% endblock %}
     <link rel="stylesheet" href="{{ 'app.css' | asset }}">
+    {% if theme.settings.get('enable_snow') or theme.settings.get('enable_overlay_navigation') %}
+    <link rel="stylesheet" href="{{ 'winter-overlay.css' | asset }}">
+    {% endif %}
+    <link rel="stylesheet" href="{{ theme.font.path|cdn }}"/>
+    <link rel="stylesheet" href="{{ 'fonts/sallaicons.css'|cdn }}"/>
     
-    {# ===== Custom CSS Variables from Theme Settings ===== #}
     <style>
         :root {
-            --primary-color: {{ theme.settings.get('primary_color', '#8A2BE2') }};
-            --secondary-color: {{ theme.settings.get('secondary_color', '#9D4EDD') }};
-            --bg-primary: {{ theme.settings.get('background_color', '#121212') }};
-            --text-primary: {{ theme.settings.get('text_color', '#E0E0E0') }};
-            {% if theme.settings.get('font') %}
-            --font-family: '{{ theme.settings.get('font') }}', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            {% endif %}
+            --font-main: '{{theme.font.name}}';
+            --color-primary: {{ theme.color.primary }};
+            --color-primary-dark: {{ theme.color.darker(0.15) }};
+            --color-primary-light: {{ theme.color.lighter(0.15) }};
+            --color-primary-reverse: {{ theme.color.reverse_text }};
         }
-        
-        {% if theme.settings.get('font') %}
-        body {
-            font-family: var(--font-family);
-        }
-        {% endif %}
     </style>
-    
-    {# ===== Additional Head Content ===== #}
-    {% block head %}{% endblock %}
-    
-    {# ===== Salla Analytics ===== #}
-    {{ salla.head }}
+    {# tracking services, custom css feature. #}
+    {% hook 'head:end' %}
 </head>
-
-<body class="{{ page.slug }}">
-    {# ===== Salla Body Scripts ===== #}
-    {{ salla.body }}
-    
-    {# ===== Header Component ===== #}
+<body id="app" class="overflow-x-hidden {% hook 'body:classes' %}
+  {{ theme.settings.get('footer_is_dark') ? ' footer-is-dark' : ' footer-is-light' }}
+  {{ theme.settings.get('topnav_is_dark') ? ' topnav-is-dark' : '' }}
+  {{ theme.settings.get('sticky_add_to_cart') ? ' is-sticky-product-bar' : '' }}
+  ">
+  <div class="loader-init"></div>
+<noscript>
+    To get full functionality of this site you need to enable JavaScript. Here is how
+    <a href="https://www.enable-javascript.com/" rel="noreferrer"
+       target="_blank">To enable JavaScript on webpage</a>.
+</noscript>
+<div class="app-inner flex flex-col min-h-full">
+    {% hook 'body:start' %}
     {% component 'header.header' %}
-    
-    {# ===== Main Content ===== #}
-    <main class="site-content" id="main-content">
-        {% block content %}{% endblock %}
-    </main>
-    
-    {# ===== Footer Component ===== #}
+    {% block content %}{% endblock %}
     {% component 'footer.footer' %}
-    
-    {# ===== Category Overlay Board Component ===== #}
-    {% if theme.settings.get('enable_overlay_navigation', true) %}
-        {% component 'home.category-overlay-board' %}
-    {% endif %}
-    
-    {# ===== Pass Theme Settings to JavaScript ===== #}
-    <script>
-        window.THEME_SETTINGS = {
-            primaryColor: '{{ theme.settings.get('primary_color', '#8A2BE2') }}',
-            secondaryColor: '{{ theme.settings.get('secondary_color', '#9D4EDD') }}',
-            backgroundColor: '{{ theme.settings.get('background_color', '#121212') }}',
-            textColor: '{{ theme.settings.get('text_color', '#E0E0E0') }}',
-            enableSnow: {{ theme.settings.get('enable_snow', true) ? 'true' : 'false' }},
-            snowIntensity: {{ theme.settings.get('snow_intensity', 120) }},
-            enableOverlayNavigation: {{ theme.settings.get('enable_overlay_navigation', true) ? 'true' : 'false' }},
-            overlayWidth: {{ theme.settings.get('overlay_width', 90) }},
-            overlayHeight: {{ theme.settings.get('overlay_height', 90) }}
-        };
-        
-        // Global variables for scripts
-        window.ENABLE_OVERLAY_NAVIGATION = {{ theme.settings.get('enable_overlay_navigation', true) ? 'true' : 'false' }};
-        window.OVERLAY_WIDTH = {{ theme.settings.get('overlay_width', 90) }};
-        window.OVERLAY_HEIGHT = {{ theme.settings.get('overlay_height', 90) }};
-        window.SNOW_INTENSITY = {{ theme.settings.get('snow_intensity', 120) }};
-    </script>
-    
-    {# ===== Salla Core JavaScript ===== #}
-    <script defer src="{{ 'app.js' | asset }}"></script>
-    
-    {# ===== Overlay Board System ===== #}
-    {% if theme.settings.get('enable_overlay_navigation', true) %}
-        <script defer src="{{ 'overlay-board.js' | asset }}"></script>
-        <script defer src="{{ 'overlay-manager.js' | asset }}"></script>
-    {% endif %}
-    
-    {# ===== Snow Waterfall Effect ===== #}
-    {% if theme.settings.get('enable_snow', true) %}
-        <script defer src="{{ 'snow-waterfall.js' | asset }}"></script>
-    {% endif %}
-    
-    {# ===== Additional Scripts ===== #}
-    {% block scripts %}{% endblock %}
-    
-    {# ===== Cart Drawer (Salla Native) ===== #}
-    {% if theme.settings.get('enable_cart_drawer', true) %}
-        <script>
-            if (window.salla) {
-                salla.event.cart.updated(() => {
-                    console.log('Cart updated');
-                });
-            }
-        </script>
-    {% endif %}
-    
-    {# ===== Accessibility: Skip to Content Link ===== #}
-    <a href="#main-content" class="skip-to-content" style="position: absolute; left: -9999px; z-index: 999;">
-        {{ trans('common.skip_to_content') }}
-    </a>
+</div>
+{% hook 'body:end' %}
+<script defer src="{{ 'app.js' | asset }}"></script>
 
-    {# ===== Product Overlay Container (Your Custom Feature) ===== #}
-    <div id="product-overlay" style="
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-    ">
-      <div style="
-        width: 90%; max-width: 900px;
-        height: 90%; max-height: 800px;
-        background: #121212;
-        border-radius: 16px;
-        overflow: hidden;
-        position: relative;
-      ">
-        <div id="overlay-loader" style="text-align: center; padding: 40px; color: #fff;">
-          Loading...
-        </div>
-        <div id="overlay-content"></div>
-      </div>
-    </div>
-    <script>
-      // Open product in overlay
-      function openProductOverlay(url) {
-        const overlay = document.getElementById('product-overlay');
-        const content = document.getElementById('overlay-content');
-        const loader = document.getElementById('overlay-loader');
+{# Winter Snowfall Effect #}
+{% if theme.settings.get('enable_snow') %}
+<script defer src="{{ 'snow-waterfall.js' | asset }}"></script>
+{% endif %}
 
-        overlay.style.display = 'flex';
-        loader.style.display = 'block';
-        content.style.display = 'none';
-        document.body.style.overflow = 'hidden';
+{# Category overlay navigation (optional) #}
+{% if theme.settings.get('enable_overlay_navigation') %}
+    {% component 'home.category-overlay-board' %}
+    <script defer src="{{ 'overlay-board.js' | asset }}"></script>
+    <script defer src="{{ 'overlay-manager.js' | asset }}"></script>
+{% endif %}
 
-        fetch(url + '?view=overlay')
-          .then(res => res.text())
-          .then(html => {
-            content.innerHTML = html;
-            loader.style.display = 'none';
-            content.style.display = 'block';
-          })
-          .catch(err => {
-            content.innerHTML = '<p style="color:red; text-align:center; padding:40px;">Error loading product.</p>';
-            loader.style.display = 'none';
-            content.style.display = 'block';
-          });
-      }
+{# Twilight Components #}
+<salla-offer-modal></salla-offer-modal>
+<salla-search></salla-search>
 
-      // Close on ESC
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          document.getElementById('product-overlay').style.display = 'none';
-          document.body.style.overflow = '';
-        }
-      });
-
-      // Close on backdrop click
-      document.getElementById('product-overlay').addEventListener('click', (e) => {
-        if (e.target.id === 'product-overlay') {
-          e.target.style.display = 'none';
-          document.body.style.overflow = '';
-        }
-      });
-    </script>
+{% if user.type=='guest' %}
+    <salla-login-modal></salla-login-modal>
+{% endif %}
+{% block scripts %}{% endblock %}
 </body>
 </html>
