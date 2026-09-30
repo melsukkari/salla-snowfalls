@@ -80,6 +80,28 @@ input double InpQuickBankUSD       = 0.60;    // SWALLOW: close each position th
 input double InpQuickBankPoints    = 0;       // or this many points of profit (0 = off)
 input bool   InpRestrikeInstantly  = true;    // no cooldown after a bank - re-strike on the next tick
 
+input group "=== BIG CHART EYE (higher-timeframe bias + runner positions) ==="
+input bool   InpUseHTFBias         = true;    // read H1/H4/D1 trend before every strike
+input ENUM_TIMEFRAMES InpHTF1      = PERIOD_H1;
+input ENUM_TIMEFRAMES InpHTF2      = PERIOD_H4;
+input ENUM_TIMEFRAMES InpHTF3      = PERIOD_D1;
+input int    InpHTFEmaFast         = 50;      // per-TF trend = price > EMA fast > EMA slow (or inverse)
+input int    InpHTFEmaSlow         = 200;
+input int    InpHTFMinTFs          = 2;       // how many of the 3 TFs must agree
+input bool   InpHTFBlockCounter    = true;    // skip scalps against a clear big-chart trend
+input bool   InpUseRunners         = true;    // open "big prize" runner positions on aligned setups
+input int    InpRunnerSlots        = 3;       // slots of the 13 reserved for runners
+input double InpRunnerLotMult      = 1.0;     // runner lot multiplier (fixed, not loss-driven)
+input int    InpRunnerBreakBars    = 24;      // H1 channel lookback for runner breakout trigger
+input double InpRunnerPullbackATR  = 0.6;     // or: price within this many H1-ATR of H1 EMA21 while trend resumes
+input int    InpRunnerGapMinutes   = 20;      // min minutes between runner entries
+input double InpRunnerSL_ATR       = 1.2;     // runner SL in H1 ATR
+input double InpRunnerTP_ATR       = 5.0;     // runner TP in H1 ATR (0 = trail only)
+input double InpRunnerBE_ATR       = 1.0;     // runner break-even trigger (H1 ATR)
+input double InpRunnerTrailStart   = 1.6;     // runner trail start (H1 ATR)
+input double InpRunnerTrailDist    = 1.0;     // runner trail distance (H1 ATR)
+input int    InpRunnerMaxHours     = 48;      // close a runner not in profit after this long
+
 input group "=== Circle of 13 (slot allocation, total capped at 13) ==="
 input int    InpMarketSlots        = 1;       // instant-entry positions
 input int    InpStopSlots          = 6;       // breakout stop ladder
@@ -175,6 +197,10 @@ int      g_dir = 0;           // approved direction: 1 / -1 / 0
 string   g_gateMsg = "";
 
 datetime g_cooldownUntil = 0, g_lastDeploy = 0, g_lastMarket = 0, g_day = 0;
+int      hE50[3], hE200[3];
+int      hE21H1 = INVALID_HANDLE, hATRH1 = INVALID_HANDLE;
+double   g_e50[3], g_e200[3], g_atrH1 = 0, g_h1Hi = 0, g_h1Lo = 0, g_h1E21 = 0;
+datetime g_lastRunner = 0;
 double   g_dayStartBal = 0, g_peakEq = 0, g_basketPeak = 0;
 bool     g_halted = false;
 int      g_nMarket = 1, g_nStop = 6, g_nLimit = 6;
@@ -210,6 +236,19 @@ int OnInit()
       return(INIT_FAILED);
      }
 
+   ENUM_TIMEFRAMES tfs[3];
+   tfs[0] = InpHTF1; tfs[1] = InpHTF2; tfs[2] = InpHTF3;
+   for(int i = 0; i < 3; i++)
+     {
+      hE50[i]  = iMA(_Symbol, tfs[i], InpHTFEmaFast, 0, MODE_EMA, PRICE_CLOSE);
+      hE200[i] = iMA(_Symbol, tfs[i], InpHTFEmaSlow, 0, MODE_EMA, PRICE_CLOSE);
+      g_e50[i] = 0; g_e200[i] = 0;
+      if(hE50[i] == INVALID_HANDLE || hE200[i] == INVALID_HANDLE) { Print("HTF handle failed."); return(INIT_FAILED); }
+     }
+   hE21H1 = iMA(_Symbol, InpHTF1, 21, 0, MODE_EMA, PRICE_CLOSE);
+   hATRH1 = iATR(_Symbol, InpHTF1, 14);
+   if(hE21H1 == INVALID_HANDLE || hATRH1 == INVALID_HANDLE) return(INIT_FAILED);
+
    g_dayStartBal = AccountInfoDouble(ACCOUNT_BALANCE);
    g_peakEq      = AccountInfoDouble(ACCOUNT_EQUITY);
    g_day         = DayStart(TimeCurrent());
@@ -225,6 +264,8 @@ void OnDeinit(const int reason)
   {
    IndicatorRelease(hATR); IndicatorRelease(hEMAf); IndicatorRelease(hEMAs);
    IndicatorRelease(hADX); IndicatorRelease(hRSI);
+   for(int i = 0; i < 3; i++) { IndicatorRelease(hE50[i]); IndicatorRelease(hE200[i]); }
+   IndicatorRelease(hE21H1); IndicatorRelease(hATRH1);
    Comment("");
   }
 
@@ -268,6 +309,11 @@ void OnTick()
    // never mix directions: if a net is held the other way, do nothing
    int held = HeldDirection();
    if(held != 0 && held != g_dir) { Panel(); return; }
+
+   // big-chart eye: runner strike first, then optionally block counter-trend scalps
+   TryRunner(g_dir);
+   if(InpUseHTFBias && InpHTFBlockCounter && HTFScore(-g_dir) >= InpHTFMinTFs)
+     { g_gateMsg = "scalp blocked: big-chart trend opposes"; Panel(); return; }
 
    Strike(g_dir);
    Panel();
@@ -374,23 +420,25 @@ int HeldDirection()
    return(0);
   }
 
-double Floating()
+double Floating(bool scalpOnly = false)
   {
    double t = 0;
    for(int i = PositionsTotal() - 1; i >= 0; i--)
      {
       if(PositionGetTicket(i) == 0 || !Mine(true)) continue;
+      if(scalpOnly && IsRunner()) continue;
       t += PositionGetDouble(POSITION_PROFIT) + PositionGetDouble(POSITION_SWAP);
      }
    return(t);
   }
 
-void CloseAllPositions()
+void CloseAllPositions(bool scalpOnly = false)
   {
    for(int i = PositionsTotal() - 1; i >= 0; i--)
      {
       ulong tk = PositionGetTicket(i);
       if(tk == 0 || !Mine(true)) continue;
+      if(scalpOnly && IsRunner()) continue;
       trade.PositionClose(tk);
      }
   }
@@ -405,10 +453,10 @@ void DeleteAllPendings()
      }
   }
 
-void FlattenAll(string why)
+void FlattenAll(string why, bool scalpOnly = false)
   {
-   PrintFormat("FLATTEN: %s (floating $%.2f)", why, Floating());
-   CloseAllPositions();
+   PrintFormat("FLATTEN%s: %s (floating $%.2f)", scalpOnly ? "(scalp)" : "", why, Floating(scalpOnly));
+   CloseAllPositions(scalpOnly);
    DeleteAllPendings();
    g_basketPeak = 0;
   }
@@ -462,6 +510,92 @@ void TickFlow(double &movePts, int &count, double &agree)
    int moves = ups + downs;
    if(moves > 0)
       agree = (double)(movePts >= 0 ? ups : downs) / moves;
+  }
+
+//====================================================================
+// BIG CHART EYE
+//====================================================================
+void RefreshHTF()
+  {
+   for(int i = 0; i < 3; i++)
+     {
+      g_e50[i]  = BufVal(hE50[i], 0, 1);
+      g_e200[i] = BufVal(hE200[i], 0, 1);
+     }
+   g_atrH1  = BufVal(hATRH1, 0, 1);
+   g_h1E21  = BufVal(hE21H1, 0, 1);
+   double h[], l[];
+   int n = MathMax(InpRunnerBreakBars, 5);
+   if(CopyHigh(_Symbol, InpHTF1, 1, n, h) == n && CopyLow(_Symbol, InpHTF1, 1, n, l) == n)
+     {
+      g_h1Hi = h[ArrayMaximum(h)];
+      g_h1Lo = l[ArrayMinimum(l)];
+     }
+  }
+
+// number of big-chart TFs whose trend points in direction dir (price > EMA fast > EMA slow)
+int HTFScore(int dir)
+  {
+   if(!InpUseHTFBias || dir == 0) return(0);
+   double px = Bid();
+   int n = 0;
+   for(int i = 0; i < 3; i++)
+     {
+      if(g_e50[i] <= 0 || g_e200[i] <= 0) continue;
+      if(dir > 0 && px > g_e50[i] && g_e50[i] > g_e200[i]) n++;
+      if(dir < 0 && px < g_e50[i] && g_e50[i] < g_e200[i]) n++;
+     }
+   return(n);
+  }
+
+bool IsRunner() { return(StringFind(PositionGetString(POSITION_COMMENT), "_R") >= 0); }
+
+int CountRunners()
+  {
+   int n = 0;
+   for(int i = PositionsTotal() - 1; i >= 0; i--)
+     {
+      if(PositionGetTicket(i) == 0 || !Mine(true)) continue;
+      if(IsRunner()) n++;
+     }
+   return(n);
+  }
+
+// Big prize entry: HTF aligned AND (H1 channel breakout OR pullback to H1 EMA21 with tick trigger in trend direction)
+void TryRunner(int dir)
+  {
+   if(!InpUseRunners || !InpUseHTFBias || InpRunnerSlots <= 0 || g_atrH1 <= 0) return;
+   if(HTFScore(dir) < InpHTFMinTFs) return;
+   if(CountRunners() >= InpRunnerSlots) return;
+   if(TimeCurrent() - g_lastRunner < InpRunnerGapMinutes * 60) return;
+   if(CountPositions() + CountPendings() >= MAX_CIRCLE) return;
+
+   double bid = Bid(), ask = Ask();
+   bool breakout = (dir > 0) ? (bid > g_h1Hi) : (bid < g_h1Lo);
+   double dist = MathAbs(bid - g_h1E21);
+   bool pullback = (dist <= InpRunnerPullbackATR * g_atrH1) &&
+                   ((dir > 0 && bid >= g_h1E21) || (dir < 0 && bid <= g_h1E21));
+   if(!breakout && !pullback) return;
+
+   bool isBuy = (dir > 0);
+   double ref = isBuy ? ask : bid;
+   double sd  = MathMax(g_atrH1 * InpRunnerSL_ATR, MinDist());
+   double sl  = NormalizeDouble(isBuy ? ref - sd : ref + sd, Dg());
+   double tp  = 0;
+   if(InpRunnerTP_ATR > 0)
+     {
+      double td = MathMax(g_atrH1 * InpRunnerTP_ATR, MinDist());
+      tp = NormalizeDouble(isBuy ? ref + td : ref - td, Dg());
+     }
+   double lot = NormLot(SlotLot(sd) * InpRunnerLotMult);
+   bool ok = isBuy ? trade.Buy(lot, _Symbol, ask, sl, tp, InpComment + "_R")
+                   : trade.Sell(lot, _Symbol, bid, sl, tp, InpComment + "_R");
+   if(ok)
+     {
+      g_lastRunner = TimeCurrent();
+      PrintFormat("RUNNER %s lot %.2f (%s) HTF=%d/3", isBuy ? "BUY" : "SELL", lot,
+                  breakout ? "H1 breakout" : "H1 pullback", HTFScore(dir));
+     }
   }
 
 //====================================================================
@@ -519,6 +653,7 @@ void RefreshBarData()
       g_atr = MathMax(g_atr, InpScalpMinATRPts * Pt());
    g_er   = Efficiency(InpERPeriod);
    g_rocSig = ROCAcceleration();
+   RefreshHTF();
 
    double h[], l[];
    if(CopyHigh(_Symbol, InpBreakTf, 1, InpBreakPeriod, h) == InpBreakPeriod &&
@@ -676,7 +811,9 @@ void Strike(int dir)
   {
    if(g_atr <= 0) return;
    int used = CountPositions() + CountPendings();
-   int slots = MAX_CIRCLE - used;
+   int runners = CountRunners();
+   int reserve = (InpUseRunners && InpUseHTFBias) ? MathMax(0, InpRunnerSlots - runners) : 0;
+   int slots = MAX_CIRCLE - used - reserve;
    if(slots <= 0) return;
 
    bool isBuy = (dir > 0);
@@ -687,7 +824,7 @@ void Strike(int dir)
    datetime now = TimeCurrent();
 
    // --- A) MARKET slot(s): instant strike, rate-limited
-   int marketOpen = CountPositions(dir);
+   int marketOpen = CountPositions(dir) - runners;
    if(g_nMarket > 0 && marketOpen < g_nMarket && now - g_lastMarket >= (InpTickScalpMode ? 1 : InpMarketGapSec) && slots > 0)
      {
       double ref = isBuy ? ask : bid;
@@ -752,9 +889,14 @@ void ManagePositions()
       double px   = isBuy ? bid : ask;
       double prof = isBuy ? px - open : open - px;
       double newSL = sl;
+      bool   run = IsRunner();
+      double a   = (run && g_atrH1 > 0) ? g_atrH1 : g_atr;
+      double beT = run ? InpRunnerBE_ATR : InpBE_TriggerATR;
+      double trS = run ? InpRunnerTrailStart : InpTrailStartATR;
+      double trD = run ? InpRunnerTrailDist : InpTrailDistATR;
 
       // SWALLOW: bank the profit the instant it appears
-      if(InpTickScalpMode || InpQuickBankUSD > 0 || InpQuickBankPoints > 0)
+      if(!run && (InpTickScalpMode || InpQuickBankUSD > 0 || InpQuickBankPoints > 0))
         {
          double usd = PositionGetDouble(POSITION_PROFIT) + PositionGetDouble(POSITION_SWAP);
          if((InpQuickBankUSD > 0 && usd >= InpQuickBankUSD) ||
@@ -766,19 +908,20 @@ void ManagePositions()
       if(InpUseTimeStop)
         {
          long ageMin = (TimeCurrent() - (datetime)PositionGetInteger(POSITION_TIME)) / 60;
-         if(ageMin >= InpTimeStopMinutes && prof <= 0)
+         long limitMin = run ? (long)InpRunnerMaxHours * 60 : InpTimeStopMinutes;
+         if(ageMin >= limitMin && prof <= 0)
            { trade.PositionClose(tk); continue; }
         }
 
-      if(InpUseBreakEven && prof >= InpBE_TriggerATR * g_atr)
+      if(InpUseBreakEven && prof >= beT * a)
         {
          double be = isBuy ? open + InpBE_LockPoints * pt : open - InpBE_LockPoints * pt;
          if(sl == 0 || (isBuy && be > newSL) || (!isBuy && be < newSL)) newSL = be;
         }
 
-      if(InpUseATRTrail && prof >= InpTrailStartATR * g_atr)
+      if(InpUseATRTrail && prof >= trS * a)
         {
-         double tr = isBuy ? px - InpTrailDistATR * g_atr : px + InpTrailDistATR * g_atr;
+         double tr = isBuy ? px - trD * a : px + trD * a;
          if(newSL == 0 || (isBuy && tr > newSL) || (!isBuy && tr < newSL)) newSL = tr;
         }
 
@@ -796,19 +939,19 @@ void ManagePositions()
 //====================================================================
 void ManageBasket()
   {
-   if(CountPositions() == 0) { g_basketPeak = 0; return; }
-   double fp = Floating();
+   if(CountPositions() - CountRunners() == 0) { g_basketPeak = 0; return; }
+   double fp = Floating(true);
    if(fp > g_basketPeak) g_basketPeak = fp;
 
    if(InpUseBasketHardTP && fp >= InpBasketHardTP)
-     { FlattenAll("basket hard target"); g_cooldownUntil = TimeCurrent() + InpCooldownSec; return; }
+     { FlattenAll("basket hard target", true); g_cooldownUntil = TimeCurrent() + InpCooldownSec; return; }
 
    if(InpUseBasketRatchet && g_basketPeak >= InpBasketRatchetStart &&
       fp <= g_basketPeak * (1.0 - InpBasketGiveBackPct / 100.0))
-     { FlattenAll("basket ratchet give-back"); g_cooldownUntil = TimeCurrent() + InpCooldownSec; return; }
+     { FlattenAll("basket ratchet give-back", true); g_cooldownUntil = TimeCurrent() + InpCooldownSec; return; }
 
    if(InpUseBasketStop && fp <= -MathAbs(InpBasketMaxLoss))
-     { FlattenAll("basket stop"); g_cooldownUntil = TimeCurrent() + InpCooldownSec * 4; return; }
+     { FlattenAll("basket stop", true); g_cooldownUntil = TimeCurrent() + InpCooldownSec * 4; return; }
   }
 
 //====================================================================
@@ -824,11 +967,12 @@ void Panel()
       "Circle: %d pos + %d pend / 13  [M%d S%d L%d]\n"
       "Votes  bull %d | bear %d  -> %s (need %d)\n"
       "ATR %.0f pts | ER %.2f | ADX %.1f | RSI %.1f | Spread %.0f\n"
-      "Gate: %s\n",
+      "HTF bull %d/3 | bear %d/3 | H1 ATR %.0f | Runners %d/%d\nGate: %s\n",
       AccountInfoDouble(ACCOUNT_BALANCE), AccountInfoDouble(ACCOUNT_EQUITY), Floating(), g_basketPeak,
       CountPositions(), CountPendings(), g_nMarket, g_nStop, g_nLimit,
       g_bullVotes, g_bearVotes, dirTxt, InpMinVotes,
       g_atr / Pt(), g_er, g_adx, g_rsi, SpreadPts(),
+      HTFScore(1), HTFScore(-1), g_atrH1 / Pt(), CountRunners(), InpRunnerSlots,
       g_gateMsg));
   }
 //+------------------------------------------------------------------+
