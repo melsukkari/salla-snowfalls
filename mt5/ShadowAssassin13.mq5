@@ -69,6 +69,17 @@ input bool   InpUseDailyLossLimit  = true;
 input bool   InpUseDrawdownLimit   = true;
 input bool   InpShowPanel          = true;
 
+input group "=== MINIMAL TICK MODE (trade on ticks with minimum requirements) ==="
+input bool   InpTickScalpMode      = true;    // ON = only spread+margin gates, 1 tick vote is enough, quick profit bank
+input int    InpScalpMaxSpread     = 80;      // spread gate used in this mode (points)
+input int    InpScalpWindowMs      = 1000;    // tick window in this mode
+input double InpScalpTickPoints    = 8;       // net tick move (points) that fires a strike
+input double InpScalpConsistency   = 0.50;    // share of ticks agreeing with the move
+input double InpScalpMinATRPts     = 100;     // ATR floor so ladder spacing always clears the spread
+input double InpQuickBankUSD       = 0.60;    // SWALLOW: close each position the moment it shows this $ profit (0 = off)
+input double InpQuickBankPoints    = 0;       // or this many points of profit (0 = off)
+input bool   InpRestrikeInstantly  = true;    // no cooldown after a bank - re-strike on the next tick
+
 input group "=== Circle of 13 (slot allocation, total capped at 13) ==="
 input int    InpMarketSlots        = 1;       // instant-entry positions
 input int    InpStopSlots          = 6;       // breakout stop ladder
@@ -231,12 +242,13 @@ void OnTick()
    ManageBasket();                 // bank / ratchet / stops on the whole net
    ManagePositions();              // BE, trail, time-stop per position
 
+   if(InpTickScalpMode && InpRestrikeInstantly) g_cooldownUntil = 0;
    if(TimeCurrent() < g_cooldownUntil) { g_gateMsg = "cooldown"; Panel(); return; }
 
    EvaluateVotes();
 
    // opposite consensus => flatten the net, then wait
-   if(InpUseOppositeFlatten && g_dir != 0)
+   if(InpUseOppositeFlatten && !InpTickScalpMode && g_dir != 0)
      {
       int held = HeldDirection();
       if(held != 0 && held == -g_dir)
@@ -248,7 +260,7 @@ void OnTick()
      }
 
    // pendings pointing the wrong way are removed as soon as direction is known
-   if(g_dir != 0) DeletePendingsNotMatching(g_dir);
+   if(g_dir != 0 && !InpTickScalpMode) DeletePendingsNotMatching(g_dir);
 
    if(g_dir == 0) { Panel(); return; }
    if(!GatesPass()) { Panel(); return; }
@@ -438,7 +450,7 @@ void TickFlow(double &movePts, int &count, double &agree)
    for(int k = 1; k < g_tickN; k++)
      {
       int idx = (newest - k + TICK_BUF) % TICK_BUF;
-      if(tNew - g_tickMs[idx] > InpTickWindowMs) break;
+      if(tNew - g_tickMs[idx] > (InpTickScalpMode ? InpScalpWindowMs : InpTickWindowMs)) break;
       int nxt = (idx + 1) % TICK_BUF;
       if(g_tickPx[nxt] > g_tickPx[idx]) ups++;
       else if(g_tickPx[nxt] < g_tickPx[idx]) downs++;
@@ -503,6 +515,8 @@ void RefreshBarData()
    g_pdi  = BufVal(hADX, 1, 1);
    g_mdi  = BufVal(hADX, 2, 1);
    g_rsi  = BufVal(hRSI, 0, 1);
+   if(InpTickScalpMode)
+      g_atr = MathMax(g_atr, InpScalpMinATRPts * Pt());
    g_er   = Efficiency(InpERPeriod);
    g_rocSig = ROCAcceleration();
 
@@ -526,10 +540,12 @@ void EvaluateVotes()
    // 1) tick velocity + consistency
    double mv; int cnt; double ag;
    TickFlow(mv, cnt, ag);
-   if(cnt >= 2 && ag >= InpTickConsistency)
+   double needMove = InpTickScalpMode ? InpScalpTickPoints : InpTickMovePoints;
+   double needAg   = InpTickScalpMode ? InpScalpConsistency : InpTickConsistency;
+   if(cnt >= 2 && ag >= needAg)
      {
-      if(mv >= InpTickMovePoints) bull++;
-      else if(mv <= -InpTickMovePoints) bear++;
+      if(mv >= needMove) bull++;
+      else if(mv <= -needMove) bear++;
      }
 
    // 2) ROC acceleration
@@ -561,8 +577,8 @@ void EvaluateVotes()
 
    g_bullVotes = bull; g_bearVotes = bear;
 
-   int need = InpUseVoteApproval ? InpMinVotes : 1;
-   int opp  = InpUseVoteApproval ? InpMaxOpposing : 6;
+   int need = (InpUseVoteApproval && !InpTickScalpMode) ? InpMinVotes : 1;
+   int opp  = (InpUseVoteApproval && !InpTickScalpMode) ? InpMaxOpposing : (InpTickScalpMode ? 0 : 6);
    g_dir = 0;
    if(bull >= need && bear <= opp && bull > bear) g_dir = 1;
    else if(bear >= need && bull <= opp && bear > bull) g_dir = -1;
@@ -574,6 +590,15 @@ void EvaluateVotes()
 bool GatesPass()
   {
    if(!InpUseGates) { g_gateMsg = "gates off"; return(true); }
+
+   if(InpTickScalpMode)   // minimum requirements: sane spread + margin only
+     {
+      if(SpreadPts() > InpScalpMaxSpread) { g_gateMsg = StringFormat("spread %.0f", SpreadPts()); return(false); }
+      double ml0 = AccountInfoDouble(ACCOUNT_MARGIN_LEVEL);
+      if(ml0 > 0 && ml0 < InpMinMarginLevel) { g_gateMsg = "margin level low"; return(false); }
+      g_gateMsg = "scalp gates open";
+      return(true);
+     }
 
    if(g_atr <= 0)                      { g_gateMsg = "no ATR yet"; return(false); }
    double atrPts = g_atr / Pt();
@@ -663,7 +688,7 @@ void Strike(int dir)
 
    // --- A) MARKET slot(s): instant strike, rate-limited
    int marketOpen = CountPositions(dir);
-   if(g_nMarket > 0 && marketOpen < g_nMarket && now - g_lastMarket >= InpMarketGapSec && slots > 0)
+   if(g_nMarket > 0 && marketOpen < g_nMarket && now - g_lastMarket >= (InpTickScalpMode ? 1 : InpMarketGapSec) && slots > 0)
      {
       double ref = isBuy ? ask : bid;
       SLTP(ref, isBuy, sl, tp);
@@ -727,6 +752,15 @@ void ManagePositions()
       double px   = isBuy ? bid : ask;
       double prof = isBuy ? px - open : open - px;
       double newSL = sl;
+
+      // SWALLOW: bank the profit the instant it appears
+      if(InpTickScalpMode || InpQuickBankUSD > 0 || InpQuickBankPoints > 0)
+        {
+         double usd = PositionGetDouble(POSITION_PROFIT) + PositionGetDouble(POSITION_SWAP);
+         if((InpQuickBankUSD > 0 && usd >= InpQuickBankUSD) ||
+            (InpQuickBankPoints > 0 && prof >= InpQuickBankPoints * pt))
+           { trade.PositionClose(tk); continue; }
+        }
 
       // time-stop: stale and not in profit
       if(InpUseTimeStop)
