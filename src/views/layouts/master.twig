@@ -78,7 +78,7 @@
     {% hook head %}
     {% block styles %}{% endblock %}
     <link rel="stylesheet" href="{{ 'app.css' | asset }}">
-    {% if theme.settings.get('enable_snow') or theme.settings.get('enable_overlay_navigation') %}
+    {% if theme.settings.get('enable_overlay_navigation') %}
     <link rel="stylesheet" href="{{ 'winter-overlay.css' | asset }}">
     {% endif %}
     <link rel="stylesheet" href="{{ theme.font.path|cdn }}"/>
@@ -117,7 +117,7 @@
 <script defer src="{{ 'app.js' | asset }}"></script>
 
 {# Winter Snowfall Effect #}
-{% if theme.settings.get('enable_snow') %}
+{% if theme.settings.get('enable_snow', true) %}
 <script defer src="{{ 'snow-waterfall.js' | asset }}"></script>
 {% endif %}
 

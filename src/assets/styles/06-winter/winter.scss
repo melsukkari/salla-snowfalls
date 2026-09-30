@@ -1,0 +1,71 @@
+/*
+ * Winter appearance layer.
+ * Uses the store's primary color (--color-primary) so the "color" option in
+ * the theme editor keeps working; only adds frosty surfaces and accents.
+ */
+:root {
+  --winter-ice: #eaf4ff;
+  --winter-frost: #f7fbff;
+  --winter-deep: #0f2a43;
+  --winter-accent: #7cc4ff;
+}
+
+body#app {
+  background: linear-gradient(180deg, var(--winter-frost) 0%, #fff 420px);
+}
+
+/* Header */
+.store-header .top-navbar {
+  background: linear-gradient(90deg, var(--winter-deep), #1d4468);
+  color: #fff;
+  a, .btn--rounded-gray { color: #fff; }
+}
+.store-header .main-nav-container {
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, .92);
+  border-bottom: 2px solid var(--winter-ice);
+}
+
+/* Sections */
+.s-block {
+  &__title h2,
+  .section-title h2 {
+    position: relative;
+    &::after {
+      content: "❄";
+      margin-inline-start: .5rem;
+      color: var(--winter-accent);
+      font-size: .8em;
+    }
+  }
+}
+
+/* Product cards */
+.s-product-card-entry {
+  border: 1px solid var(--winter-ice);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(15, 42, 67, .14);
+  }
+}
+
+/* Buttons */
+.btn--primary,
+.s-button-primary {
+  box-shadow: 0 4px 14px rgba(124, 196, 255, .35);
+}
+
+/* Footer */
+.store-footer {
+  border-top: 3px solid var(--winter-accent);
+  &__inner { background: var(--winter-frost); }
+}
+.footer-is-dark .store-footer__inner {
+  background: var(--winter-deep);
+}
+
+/* Snow canvas must never block clicks */
+#snow-canvas { pointer-events: none; }
