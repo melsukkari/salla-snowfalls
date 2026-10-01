@@ -1,0 +1,37 @@
+.asp-wrap h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+
+.asp-tab-content { margin-top: 1.5rem; }
+
+/* Status bar */
+.asp-status-bar {
+    display: flex;
+    gap: 2rem;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+}
+.asp-status-item { font-size: 0.9rem; }
+
+/* Action buttons */
+.asp-actions { margin-bottom: 1.5rem; }
+
+/* Log table */
+.asp-log-table td { vertical-align: middle; font-size: 0.85rem; }
+.asp-log-table code { background: #f0f0f0; padding: 2px 5px; border-radius: 3px; }
+
+/* Badges */
+.asp-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+.asp-badge-success { background: #d4edda; color: #155724; }
+.asp-badge-error   { background: #f8d7da; color: #721c24; }
+.asp-badge-info    { background: #d1ecf1; color: #0c5460; }
