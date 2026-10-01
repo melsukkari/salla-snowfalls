@@ -48,6 +48,8 @@ class ASP_Admin {
             'asp_news_post_types' => [ __CLASS__, 'sanitize_types' ],
             'asp_schema_mode' => 'sanitize_key', 'asp_schema_type' => 'sanitize_text_field',
             'asp_schema_faq' => 'absint', 'asp_llms_txt' => 'absint', 'asp_ai_bots' => 'sanitize_key',
+            'asp_verify_files' => 'sanitize_textarea_field', 'asp_verify_google' => 'sanitize_text_field',
+            'asp_verify_bing' => 'sanitize_text_field', 'asp_verify_yandex' => 'sanitize_text_field',
         ];
         foreach ( $engine_fields as $key => $cb ) {
             register_setting( 'asp_engines_group', $key, [ 'sanitize_callback' => $cb ] );
@@ -381,6 +383,17 @@ class ASP_Admin {
                     <p class="description">Only applies to WordPress' virtual robots.txt (no physical robots.txt file in the web root).</p>
                 </td></tr>
             </table>
+            <h2>Site verification</h2>
+            <table class="form-table">
+                <tr><th>Google HTML files</th><td><textarea name="asp_verify_files" rows="2" class="large-text code"><?php echo esc_textarea( ASP_Options::get( 'asp_verify_files' ) ); ?></textarea><p class="description">One filename per line (e.g. <code>googlef68854144a6863be.html</code>). Served at the site root with the correct content. Not needed if a real file with that name already exists on the server.</p></td></tr>
+                <tr><th>Meta tags</th><td>
+                    <p><label>Google <input type="text" name="asp_verify_google" value="<?php echo esc_attr( get_option( 'asp_verify_google', '' ) ); ?>" class="regular-text" /></label></p>
+                    <p><label>Bing <input type="text" name="asp_verify_bing" value="<?php echo esc_attr( get_option( 'asp_verify_bing', '' ) ); ?>" class="regular-text" /></label></p>
+                    <p><label>Yandex <input type="text" name="asp_verify_yandex" value="<?php echo esc_attr( get_option( 'asp_verify_yandex', '' ) ); ?>" class="regular-text" /></label></p>
+                    <p class="description">Content value only, from each engine's "HTML tag" verification option.</p>
+                </td></tr>
+            </table>
+
             <?php submit_button( 'Save Engines & AI' ); ?>
         </form>
         <?php

@@ -25,6 +25,7 @@ class ASP_Options {
             'asp_schema_faq'         => 1,
             'asp_llms_txt'           => 1,
             'asp_ai_bots'            => 'allow',
+            'asp_verify_files'       => 'googlef68854144a6863be.html',
         ];
     }
 

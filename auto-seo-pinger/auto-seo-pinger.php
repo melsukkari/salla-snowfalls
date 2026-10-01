@@ -32,6 +32,7 @@ require_once ASP_PLUGIN_DIR . 'includes/class-asp-pings.php';
 require_once ASP_PLUGIN_DIR . 'includes/class-asp-news-sitemap.php';
 require_once ASP_PLUGIN_DIR . 'includes/class-asp-schema.php';
 require_once ASP_PLUGIN_DIR . 'includes/class-asp-geo.php';
+require_once ASP_PLUGIN_DIR . 'includes/class-asp-verify.php';
 require_once ASP_PLUGIN_DIR . 'includes/class-asp-dispatcher.php';
 require_once ASP_PLUGIN_DIR . 'admin/class-asp-admin.php';
 
@@ -42,6 +43,7 @@ register_deactivation_hook( __FILE__, [ 'ASP_Activator', 'deactivate' ] );
 // Boot the plugin
 function asp_init() {
     ASP_Router::init();
+    ASP_Verify::init();
     ASP_IndexNow::init();
     ASP_Pings::init();
     ASP_News_Sitemap::init();
