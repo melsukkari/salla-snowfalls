@@ -1,217 +1,125 @@
-<div id="top"></div>
-<br />
-<div align="center"> 
-  <a href="https://salla.dev"> 
-    <img src="https://salla.dev/wp-content/uploads/2023/03/1-Light.png" alt="Logo"> 
-  </a>
-  <h1 align="center">Theme Raed</h1>
-  <p align="center">
-    Theme Raed is the starting point for developing Themes for Salla Stores. 
-    <br />
-    <a href="https://salla.dev/"><strong>Explore our blogs »</strong></a>
-    <br />
-    <a href="https://github.com/SallaApp/theme-raed/issues/new">Report Bug</a> · 
-    <a href="https://github.com/SallaApp/theme-raed/discussions/new">Request Feature</a> . <a href="https://t.me/salladev">&lt;/Salla Developers&gt;</a> . <a href="https://docs.salla.dev/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM">Official Documentation</a> 
-  </p>
-</div>
+# Mawsim · موسم — Campaign Landing Kit for Salla
 
+Arabic-first landing page components for **Salla** seasonal campaigns and product launches.
+Sold as a Component Bundle on the Salla Themes Marketplace.
 
-<!-- TABLE OF CONTENTS -->
-<details open>
-  <summary>Table of Contents</summary>
-<ol>
-<li><a  href="#overview">Overview</a></li>
-<li><a  href="#getting-started">Getting Started</a>
-<ul>
-<li><a  href="#prerequisite">Prerequisite</a></li>
-<li><a  href="#install">Installation</a></li>
-</ul>
-</li>
-<li>
-<a  href="#usage">Usage</a>
-<ul>
-<li><a  href="#directory-structure">Directory Structure</a></li>
-<li><a  href="#theme-preview">Theme Preview</a></li>
-</ul>
-</li>
-<li>
-<a  href="#main-features">Main Features</a>
-<ul>
-<li><a  href="#theme-features">Theme Features</a></li>
-<li><a  href="#theme-components">Theme Components</a></li>
-</ul>
-</li>
-<li><a  href="#support">Support</a></li>
-<li><a  href="#contributing">Contributing</a></li>
-<li><a  href="#credits">Credits</a></li>
-<li><a  href="#license">License</a></li>
-</ol>
-</details>
+- **11 components** — Lit web components, RTL-first, responsive, keyboard-accessible
+- **Overlay product board** — buttons open a festive full-screen board with the campaign
+  products, 3D-tilt cards, quick view, gallery, quantity and add-to-cart — without leaving the page
+- **Interactive festive scenes** — swinging Ramadan lanterns, glowing crescent, falling 3D
+  snowballs, confetti and golden stars that react to mouse, touch and phone tilt
+- **4 ready templates** — Product Launch (default), Ramadan, White Friday, Saudi National Day
+- Follows the merchant's theme color automatically, with automatic contrast correction
+- Zero external images or fonts — nothing to break, nothing to host
 
-<br>
+| Component | What it does |
+|---|---|
+| `mawsim-festive-layer` | Snow / golden stars / confetti falling over the whole page, tap for sparks, on/off button |
+| `mawsim-hero` | Headline, one main CTA, photo / cover / decoration, optional interactive scene background |
+| `mawsim-countdown` | Offer timer, Arabic digits option, auto-hide when expired |
+| `mawsim-product-spotlight` | Up to 8 chosen products, live prices, add-to-cart, quick view in the overlay board |
+| `mawsim-problem-solution` | Before → after panels |
+| `mawsim-benefits` | Icon grid of key benefits |
+| `mawsim-testimonials` | Reviews with stars and average score, swipeable on mobile |
+| `mawsim-comparison` | "Us vs. others" table |
+| `mawsim-faq` | Accordion FAQ + WhatsApp/contact button |
+| `mawsim-trust-badges` | Shipping / payment / returns / support strip |
+| `mawsim-sticky-cta` | Closing banner + sticky bottom bar that appears on scroll |
 
-## Overview
-Theme Raed is the starting point for developers to design themes for merchant stores that reflect the uniqueness of each store on the [Salla Platform](https://s.salla.sa). Custom themes will make it much easier for developers to tailor the merchant's store to its changing demands over time. It shipped as the default theme along with the [Twilight Themes](https://docs.salla.dev/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM), which is the Salla themes engine for developers to create customizable themes to be used on the [Salla Platform](https://salla.sa/site/).
-  
-## Getting Started 
-Developers can use Salla Theme Raed to not only design Salla themes with custom HTML/CSS/JS files and reusable custom UI components, but also to build custom actions that trigger JS events and hooks.
+Any button whose link is left empty opens the **overlay board** with the Product Spotlight's
+products (or scrolls to that section, if the merchant chooses "scroll").
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+### Festive scenes
 
-### Prerequisite  
-- Basic understanding of HTML, CSS, JS, and the [Twig Template Engine](https://twig.symfony.com/).
-- Partner account at [Salla Partners Portal](https://salla.partners/) to create a demo store to publish and test your theme.
-- A [Github](https://github.com) account into which the theme can be synced.
-- Installing [Salla CLI](https://www.npmjs.com/package/@salla.sa/cli)
+| Scene | Where | Interaction |
+|---|---|---|
+| `ramadan` | hero, board | fanous lanterns swing when the pointer passes, tap → swing + golden sparks; crescent + twinkling stars |
+| `snow` | hero, board, page layer | 3D-shaded snowballs with depth parallax, blown away from the pointer |
+| `ramadan-snow` | hero, board | both together |
+| `confetti` | hero, board, page layer | flipping confetti in the store's colors |
+| `stars` | hero, board, page layer | falling golden stars and small crescents |
 
-### Install  
-Theme Raed gets installed by default upon installing the Twilight Themes. Twilight can be installed in two ways:
+All scenes pause when off-screen or in a background tab, cap the pixel ratio on phones,
+and show a still frame when the visitor has "reduce motion" turned on.
 
-- Through the [Salla Partners Portal](https://docs.salla.dev/doc-421877/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM#creating-theme-via-salla-partners-portal)
+---
 
-- Through the [Salla CLI](https://docs.salla.dev/doc-422775/?nav=01HNA8QHCPJTCY5VSEZ616JCAK).
+## Requirements
 
-Either way, it will trigger the installation of the Twilight Engine and the Theme Raed.  This a complete article for how to [install and create](https://docs.salla.dev/doc-421877/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM) the Twilight Themes.
+- Node.js 18+ and **pnpm** (`npm i -g pnpm`) — the Salla SDK refuses npm/yarn installs
+- Salla CLI (`npm i -g @salla.sa/cli`) — only for `salla login` (needed by the public preview)
+- A Salla Partners account and a demo store
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+## Commands
 
-## Usage 
-Theme Raed will be installed as the default theme when you install Twilight. We'll look at how this theme's directories are set up and how to use the preview mode in the next section.
-
-### Directory structure  
-**Theme Raed** is a collection of files and folders that define the Salla Store presentation layer. Following is the directory structure for this starter theme.
-```shell
-+---scr
-    +---assets
-    |   +---images      
-    |   +---js      
-    |   +---styles         
-    +---locales
-    |       ar.json
-    |       en.json
-    +---views
-        +---components
-        |   +---footer
-        |   +---header
-        |   +---home
-        |   +---product
-        |   comments.twig
-        +---layouts
-        |       master.twig
-        +---pages
-            |   cart.twig
-            |   index.twig
-            |   loyalty.twig
-            |   page-single.twig
-            |   thank-you.twig
-            +---blog
-            |       index.twig
-            |       single.twig 
-            +---brands
-            |       index.twig
-            |       single.twig 
-            +---customer
-               |   notifications.twig
-               |   profile.twig
-               |   wishlist.twig
-               +---orders
-               |      index.twig
-               |      single.twig
-            +---partials
-                |   single-comment.twig
-                +---product
-                  |   card-full-image.twig
-                  |   card-mini.twig
-                  |   card.twig
-                  |   options.twig
-                  |   slider.twig
-            +---product
-            |       index.twig
-            |       single.twig
+```bash
+pnpm install          # install dependencies
+pnpm dev              # Salla's local demo page with a settings sidebar
+pnpm run check        # validate bundle rules + type-check + build  ← run before every push
+pnpm build            # production build into dist/
+salla login           # once, links your Partners account
+pnpm preview:public   # shareable preview link on salla.design (after build)
 ```
 
-### Theme Preview  
-Usin [Salla CLI](https://github.com/SallaApp/Salla-CLI), the developer can preview the theme as they are being developed.  The `preview` command helps the developer to get a look at the theme in live mode.
+## Project structure
 
-<!-- theme: info -->
-> To run the preview command, the developer must be in the theme's root folder.
-
-The developer can run the command `preview` and specify the configuration to view the theme:
-
-```shell title = "Terminal"
-salla theme preview
-
-# Alias command for preview
-salla theme p
+```
+src/
+  components/<name>/index.ts   one folder per component (entry file)
+  shared/                      base element, design tokens, icons, helpers
+    scene.ts                   interactive festive canvas (lanterns, snow, confetti, stars)
+    board.ts                   overlay product board + quick view
+    products.ts                product fetching cache, campaign registry, HTML sanitizer
+templates/*.json               seasonal templates (component order + values)
+twilight-bundle.json           bundle manifest: components, merchant settings, templates
+scripts/
+  generate-manifest.py         regenerates twilight-bundle.json + templates (edit settings here)
+  validate-bundle.mjs          pre-publish checks (1–15 components, no header/footer, keys…)
+docs/
+  merchant-guide.html          merchant documentation (use as the listing's Documentation Link)
+  previews/                    screenshots used as component and template previews
 ```
 
-On the other hand, the [Partners Portal]() lists the demo stores of the developer. The developer may select a demo store where the theme will be installed, after which the store will be instantly shown in the browser. This is a fantastic option for developers who want to see live updates to their themes appearing on the store right away.
+## Editing merchant settings or templates
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+Settings and template copy live in `scripts/generate-manifest.py` so every component, key
+and template stays consistent. After editing:
 
-## Main Features 
-By default, Theme Raed home page displays a collection of Pre-Defined and Custom Components. These components are located in the [`src/views/components/home/`](https://github.com/SallaApp/theme-raed/tree/master/src/views/components/home) folder.
+```bash
+python3 scripts/generate-manifest.py
+pnpm run check
+```
 
+Component keys are derived from the component name — **never rename a component after
+publishing**, or stores lose their saved settings.
 
-### Theme Features  
- Pre-Defined  Components, which are know as Theme Features, listed in the [twilight.json](https://github.com/SallaApp/theme-raed/blob/master/twilight.json) under the `features` section. Below is a list of these components.
- 
- | <div style="width:220px">Component</div>                                                       | Discription                                                                                                                                                                 |
- | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
- | [Youtube](https://docs.salla.dev/doc-422582/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM)                   | This component is responsible for displaying Youtube videos that the developer preselects.                                                                                  |
- | [Fixed Banner](https://docs.salla.dev/doc-422583/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM)              | Fixed banner is the area in charge of displaying a banner that is fixated on the home page.                                                                                 |
- | [Testimonials](https://docs.salla.dev/doc-422584/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM)              | This component displays testimonials that the developer preselects.                                                                                                         |
- | [Parallax backgorund](https://docs.salla.dev/doc-422585/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM)       | This component displays products with a backgournd that zooms out slowly giving a 2D effect.                                                                                |
- | [Photos slider](https://docs.salla.dev/doc-422586/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM)             | Photos are displayed in a slider by using this component.                                                                                                                   |
- | [Store Features](https://docs.salla.dev/doc-422587/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM)            | This component is responsible for showcasing the store features such as a detailed product description, customer reviews of the product, and a fast guest check-out option. |
- | [Square photos](https://docs.salla.dev/doc-422588/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM)             | Use this component to display photos in a square shape.                                                                                                                     |
- | [Fixed products](https://docs.salla.dev/doc-422589/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM)            | Use this component to pin the products that you wish to have displayed always.                                                                                              |
- | [Products slider](https://docs.salla.dev/doc-422590/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM)           | This slider component helps navigate between products vertically/horizontally.                                                                                              |
- | [Featured prodcuts style 1](https://docs.salla.dev/doc-422591/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM) | Using this component, featured products are exhibited in a pre-defined style.                                                                                               |
- | [Featured prodcuts style 2](https://docs.salla.dev/doc-422592/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM) | Using this component, featured products are exhibited in a pre-defined style.                                                                                               |
- | [Featured prodcuts style 3](https://docs.salla.dev/doc-422593/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM) | Using this component, featured products are exhibited in a pre-defined style.                                                                                               |
- | [Latest Products](https://docs.salla.dev/doc-422599/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM)           | This component displays the latest products added to the store automatically.                                                                                               |
- | [Vertical menu with slider](https://docs.salla.dev/doc-422600/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM) | Used to display a menu for a group of the sub-pages' links in a vertical menu.                                                                                              |
+## Publishing on Salla
 
-### Theme Components
-The Custom Components can be easily modified by the developer. They are known as Theme Components. Below is the list of the Custom Components that are shipped by default along with Theme Raed.
+1. This code lives in **`melsukkari/salla-snowfalls`**, branch **`master`**
+   (the previous theme is saved in the `backup-snowfalls-theme` branch).
+2. Salla Partners → **Bundles** → **Import Bundle from GitHub** → choose the repo.
+   When asked for a bundle name use one starting with `tw-`, e.g. `tw-mawsim-landing-kit`.
+3. Set the bundle type to **Template Landing Page**, pick the `master` branch.
+4. Install on your demo store and test every template (Arabic + English, phone + desktop).
+5. Listing: upload screenshots from `docs/previews/`, set the price, and use the hosted
+   `docs/merchant-guide.html` as the Documentation Link.
+6. Submit for review.
 
-| Components                                                                                       | Description                                                                                      |
-| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
-| [Brands](https://docs.salla.dev/doc-422594/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM)                      | Brands' logos of the store are displayed in this component section.                              |
-| [Enhanced Squared Image](https://docs.salla.dev/doc-422595/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM)      | Enhanced images in a square shape are displayed with the help of this component.                 |
-| [Main links](https://docs.salla.dev/doc-422596/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM)                  | This component helps to portray the store main links.                                            |
-| [Enhanced Slider](https://docs.salla.dev/doc-422597/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM)             | The slider component helps navigate vertically/horizontally.                                     |
-| [Slider products with header](https://docs.salla.dev/doc-422598/?nav=01HNFTD5Y5ESFQS3P9MJ0721VM) | Slider products with header displays the products in a slide and give the sldier a header title. |
+### Preview images
 
+`twilight-bundle.json` points component previews at
+`raw.githubusercontent.com/melsukkari/salla-snowfalls/master/docs/previews/…`.
+These load only while the repository is **public**. If you keep it private, upload
+`docs/previews/` to your own server (e.g. `https://tholth.com/mawsim/previews/`), change
+`PREVIEW_BASE` in `scripts/generate-manifest.py`, and re-run it.
 
-## Support
+## Scaling to more bundles
 
-The team is always here to help you. Happen to face an issue? Want to report a bug? You can submit one here on Github using the [Issue Tracker](https://github.com/SallaApp/theme-raed/issues/new). If you still have any questions, please contact us via the [Telegram Bot](https://t.me/SallaSupportBot) or join in the Global Developer Community on [Telegram](https://t.me/salladev).
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-## Contributing
-
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create.
-Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request.
-You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-## Credits
-- [Salla](https://github.com/sallaApp)
-- [All Contributors](../../contributors)
-<p align="right">(<a href="#top">back to top</a>)</p>
+The `src/shared/` folder is the reusable core. For a new niche bundle
+(e.g. `tw-mawsim-perfume`, `tw-mawsim-fashion`): copy the repo, keep `shared/`,
+add or reskin components, rename the component prefix, and edit the generator.
+Each bundle is a separate marketplace listing.
 
 ## License
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-<p align="right">(<a href="#top">back to top</a>)</p>
+
+Proprietary — © Sukkari. Sold through the Salla Themes Marketplace; not for redistribution.

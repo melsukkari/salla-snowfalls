@@ -1,0 +1,2295 @@
+{
+  "id": "14852c53-c18b-553a-9461-029b2a17c36c",
+  "components": [
+    {
+      "title": "موسم · الواجهة الرئيسية",
+      "icon": "sicon-rocket",
+      "name": "mawsim-hero",
+      "key": "6c5fa666-8b53-509a-9a4f-dcdce216c86b",
+      "image": "https://raw.githubusercontent.com/melsukkari/salla-snowfalls/master/docs/previews/mawsim-hero.png",
+      "fields": [
+        {
+          "id": "eyebrow",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص صغير فوق العنوان",
+          "required": false,
+          "maxLength": 40,
+          "value": {
+            "ar": "إطلاق جديد",
+            "en": "New launch"
+          }
+        },
+        {
+          "id": "title",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "العنوان الرئيسي",
+          "required": true,
+          "maxLength": 90,
+          "value": {
+            "ar": "منتج واحد يغيّر روتينك اليومي",
+            "en": "One product that changes your daily routine"
+          }
+        },
+        {
+          "id": "subtitle",
+          "type": "string",
+          "format": "textarea",
+          "multilanguage": true,
+          "label": "الوصف",
+          "required": false,
+          "maxLength": 240,
+          "value": {
+            "ar": "صمّمناه بعناية ليوفر وقتك ويمنحك نتيجة تلاحظها من أول استخدام.",
+            "en": "Carefully designed to save your time and give you results from the first use."
+          },
+          "rows": 3
+        },
+        {
+          "id": "cta_label",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص الزر الرئيسي",
+          "required": false,
+          "maxLength": 30,
+          "value": {
+            "ar": "اطلبه الآن",
+            "en": "Order now"
+          }
+        },
+        {
+          "id": "cta_link",
+          "type": "string",
+          "format": "url",
+          "label": "رابط الزر الرئيسي",
+          "placeholder": "https://",
+          "required": false,
+          "description": "اتركه فارغاً ليفتح الزر لوحة منتجات العرض فوق الصفحة (أو ينتقل لقسم المنتجات حسب الإعداد التالي)."
+        },
+        {
+          "id": "cta_action",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "عند الضغط على زر بدون رابط",
+          "required": true,
+          "options": [
+            {
+              "label": "افتح لوحة منتجات العرض فوق الصفحة",
+              "value": "board",
+              "key": "board"
+            },
+            {
+              "label": "انتقل إلى قسم المنتجات",
+              "value": "scroll",
+              "key": "scroll"
+            }
+          ],
+          "selected": [
+            {
+              "label": "افتح لوحة منتجات العرض فوق الصفحة",
+              "value": "board",
+              "key": "board"
+            }
+          ],
+          "description": "لوحة المنتجات تعرض منتجات عنصر «منتجات الحملة» مع عرض سريع وإضافة للسلة."
+        },
+        {
+          "id": "secondary_label",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص الزر الثانوي (اختياري)",
+          "required": false,
+          "maxLength": 30,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "secondary_link",
+          "type": "string",
+          "format": "url",
+          "label": "رابط الزر الثانوي",
+          "placeholder": "https://",
+          "required": false,
+          "description": "يظهر الزر الثانوي فقط عند إضافة نص ورابط."
+        },
+        {
+          "id": "note",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "ملاحظة أسفل الأزرار",
+          "required": false,
+          "maxLength": 80,
+          "value": {
+            "ar": "شحن سريع لجميع مناطق المملكة",
+            "en": "Fast shipping across the Kingdom"
+          }
+        },
+        {
+          "id": "image",
+          "type": "string",
+          "format": "image",
+          "label": "صورة المنتج / الحملة",
+          "required": false,
+          "description": "المقاس المقترح 1200×1000. بدون صورة يظهر القسم بتصميم مركزي مع زخرفة."
+        },
+        {
+          "id": "image_alt",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "وصف الصورة (لمحركات البحث)",
+          "required": false,
+          "maxLength": 120,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "badge",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "شارة على الصورة",
+          "required": false,
+          "maxLength": 40,
+          "value": {
+            "ar": "خصم 20% لفترة محدودة",
+            "en": "20% off — limited time"
+          }
+        },
+        {
+          "id": "layout",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "تخطيط القسم",
+          "required": true,
+          "options": [
+            {
+              "label": "النص ثم الصورة",
+              "value": "split",
+              "key": "split"
+            },
+            {
+              "label": "الصورة ثم النص",
+              "value": "split-reverse",
+              "key": "split-reverse"
+            },
+            {
+              "label": "الصورة كخلفية",
+              "value": "cover",
+              "key": "cover"
+            }
+          ],
+          "selected": [
+            {
+              "label": "النص ثم الصورة",
+              "value": "split",
+              "key": "split"
+            }
+          ]
+        },
+        {
+          "id": "decor",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "زخرفة (عند عدم وجود صورة)",
+          "required": true,
+          "options": [
+            {
+              "label": "بدون",
+              "value": "none",
+              "key": "none"
+            },
+            {
+              "label": "هلال ونجوم",
+              "value": "crescent",
+              "key": "crescent"
+            },
+            {
+              "label": "نقش هندسي",
+              "value": "geometric",
+              "key": "geometric"
+            },
+            {
+              "label": "لمعات",
+              "value": "sparkle",
+              "key": "sparkle"
+            },
+            {
+              "label": "أمواج",
+              "value": "waves",
+              "key": "waves"
+            }
+          ],
+          "selected": [
+            {
+              "label": "أمواج",
+              "value": "waves",
+              "key": "waves"
+            }
+          ]
+        },
+        {
+          "id": "scene",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "خلفية تفاعلية متحركة",
+          "required": true,
+          "options": [
+            {
+              "label": "بدون",
+              "value": "none",
+              "key": "none"
+            },
+            {
+              "label": "رمضان: فوانيس معلّقة وهلال ونجوم",
+              "value": "ramadan",
+              "key": "ramadan"
+            },
+            {
+              "label": "ثلج: كرات ثلج متساقطة",
+              "value": "snow",
+              "key": "snow"
+            },
+            {
+              "label": "رمضان + ثلج",
+              "value": "ramadan-snow",
+              "key": "ramadan-snow"
+            },
+            {
+              "label": "قصاصات احتفالية ملونة",
+              "value": "confetti",
+              "key": "confetti"
+            },
+            {
+              "label": "نجوم وأهلّة ذهبية متساقطة",
+              "value": "stars",
+              "key": "stars"
+            }
+          ],
+          "selected": [
+            {
+              "label": "بدون",
+              "value": "none",
+              "key": "none"
+            }
+          ],
+          "description": "فوانيس تتأرجح عند تمرير الماوس أو اللمس، وكرات ثلج تتطاير بعيداً عن المؤشر. تظهر أفضل مع خلفية «لون المتجر» أو «داكن»."
+        },
+        {
+          "id": "scene_density",
+          "type": "items",
+          "format": "radio-list",
+          "source": "Manual",
+          "label": "كثافة الحركة",
+          "required": true,
+          "options": [
+            {
+              "label": "خفيفة",
+              "value": "0.6",
+              "key": "0.6"
+            },
+            {
+              "label": "متوسطة",
+              "value": "1",
+              "key": "1"
+            },
+            {
+              "label": "كثيفة",
+              "value": "1.5",
+              "key": "1.5"
+            }
+          ],
+          "selected": [
+            {
+              "label": "متوسطة",
+              "value": "1",
+              "key": "1"
+            }
+          ]
+        },
+        {
+          "id": "tone",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "خلفية القسم",
+          "required": true,
+          "options": [
+            {
+              "label": "تلقائي (شفاف)",
+              "value": "auto",
+              "key": "auto"
+            },
+            {
+              "label": "لون فاتح من لون المتجر",
+              "value": "tint",
+              "key": "tint"
+            },
+            {
+              "label": "لون المتجر الأساسي",
+              "value": "primary",
+              "key": "primary"
+            },
+            {
+              "label": "داكن",
+              "value": "dark",
+              "key": "dark"
+            }
+          ],
+          "selected": [
+            {
+              "label": "لون فاتح من لون المتجر",
+              "value": "tint",
+              "key": "tint"
+            }
+          ]
+        },
+        {
+          "id": "accent_color",
+          "type": "string",
+          "format": "color",
+          "inputType": "color",
+          "label": "لون مخصص (اختياري)",
+          "required": false,
+          "description": "يستخدم لون متجرك تلقائياً. اختر لوناً هنا فقط إذا أردت لوناً مختلفاً لهذا القسم."
+        }
+      ]
+    },
+    {
+      "title": "موسم · شارات الثقة",
+      "icon": "sicon-lock",
+      "name": "mawsim-trust-badges",
+      "key": "aff3b1d8-df68-5551-b63f-7c5f8b51a4a6",
+      "image": "https://raw.githubusercontent.com/melsukkari/salla-snowfalls/master/docs/previews/mawsim-trust-badges.png",
+      "fields": [
+        {
+          "id": "title",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "العنوان (اختياري)",
+          "required": false,
+          "maxLength": 60,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "items",
+          "type": "collection",
+          "format": "collection",
+          "label": "الشارات",
+          "item_label": "شارة",
+          "required": true,
+          "minLength": 1,
+          "maxLength": 6,
+          "fields": [
+            {
+              "id": "icon",
+              "type": "items",
+              "format": "dropdown-list",
+              "source": "Manual",
+              "label": "الأيقونة",
+              "required": true,
+              "options": [
+                {
+                  "label": "صح ✓",
+                  "value": "check",
+                  "key": "check"
+                },
+                {
+                  "label": "شحن",
+                  "value": "truck",
+                  "key": "truck"
+                },
+                {
+                  "label": "ضمان / حماية",
+                  "value": "shield",
+                  "key": "shield"
+                },
+                {
+                  "label": "دفع",
+                  "value": "card",
+                  "key": "card"
+                },
+                {
+                  "label": "استرجاع",
+                  "value": "return",
+                  "key": "return"
+                },
+                {
+                  "label": "نجمة",
+                  "value": "star",
+                  "key": "star"
+                },
+                {
+                  "label": "هدية",
+                  "value": "gift",
+                  "key": "gift"
+                },
+                {
+                  "label": "وقت",
+                  "value": "clock",
+                  "key": "clock"
+                },
+                {
+                  "label": "دعم / محادثة",
+                  "value": "chat",
+                  "key": "chat"
+                },
+                {
+                  "label": "تميّز",
+                  "value": "sparkle",
+                  "key": "sparkle"
+                },
+                {
+                  "label": "قلب",
+                  "value": "heart",
+                  "key": "heart"
+                },
+                {
+                  "label": "طبيعي",
+                  "value": "leaf",
+                  "key": "leaf"
+                },
+                {
+                  "label": "سرعة",
+                  "value": "bolt",
+                  "key": "bolt"
+                },
+                {
+                  "label": "جودة",
+                  "value": "medal",
+                  "key": "medal"
+                },
+                {
+                  "label": "هاتف",
+                  "value": "phone",
+                  "key": "phone"
+                },
+                {
+                  "label": "هلال",
+                  "value": "moon",
+                  "key": "moon"
+                },
+                {
+                  "label": "عرض / سعر",
+                  "value": "tag",
+                  "key": "tag"
+                }
+              ],
+              "selected": [
+                {
+                  "label": "ضمان / حماية",
+                  "value": "shield",
+                  "key": "shield"
+                }
+              ]
+            },
+            {
+              "id": "title",
+              "type": "string",
+              "format": "text",
+              "label": "العنوان",
+              "required": true,
+              "maxLength": 40
+            },
+            {
+              "id": "text",
+              "type": "string",
+              "format": "text",
+              "label": "الوصف",
+              "required": false,
+              "maxLength": 80
+            }
+          ],
+          "value": [
+            {
+              "icon": [
+                {
+                  "label": "شحن",
+                  "value": "truck",
+                  "key": "truck"
+                }
+              ],
+              "title": "شحن سريع",
+              "text": "لجميع مناطق المملكة"
+            },
+            {
+              "icon": [
+                {
+                  "label": "دفع",
+                  "value": "card",
+                  "key": "card"
+                }
+              ],
+              "title": "دفع آمن",
+              "text": "مدى، Apple Pay، تقسيط"
+            },
+            {
+              "icon": [
+                {
+                  "label": "استرجاع",
+                  "value": "return",
+                  "key": "return"
+                }
+              ],
+              "title": "استرجاع سهل",
+              "text": "خلال 7 أيام"
+            },
+            {
+              "icon": [
+                {
+                  "label": "دعم / محادثة",
+                  "value": "chat",
+                  "key": "chat"
+                }
+              ],
+              "title": "دعم مباشر",
+              "text": "نرد عليك بسرعة"
+            }
+          ]
+        },
+        {
+          "id": "tone",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "خلفية القسم",
+          "required": true,
+          "options": [
+            {
+              "label": "تلقائي (شفاف)",
+              "value": "auto",
+              "key": "auto"
+            },
+            {
+              "label": "لون فاتح من لون المتجر",
+              "value": "tint",
+              "key": "tint"
+            },
+            {
+              "label": "لون المتجر الأساسي",
+              "value": "primary",
+              "key": "primary"
+            },
+            {
+              "label": "داكن",
+              "value": "dark",
+              "key": "dark"
+            }
+          ],
+          "selected": [
+            {
+              "label": "لون فاتح من لون المتجر",
+              "value": "tint",
+              "key": "tint"
+            }
+          ]
+        },
+        {
+          "id": "accent_color",
+          "type": "string",
+          "format": "color",
+          "inputType": "color",
+          "label": "لون مخصص (اختياري)",
+          "required": false,
+          "description": "يستخدم لون متجرك تلقائياً. اختر لوناً هنا فقط إذا أردت لوناً مختلفاً لهذا القسم."
+        }
+      ]
+    },
+    {
+      "title": "موسم · المشكلة والحل",
+      "icon": "sicon-check-circle",
+      "name": "mawsim-problem-solution",
+      "key": "69ec1021-5d61-59ff-bf7a-ee9f082d92ca",
+      "image": "https://raw.githubusercontent.com/melsukkari/salla-snowfalls/master/docs/previews/mawsim-problem-solution.png",
+      "fields": [
+        {
+          "id": "title",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "العنوان",
+          "required": false,
+          "maxLength": 80,
+          "value": {
+            "ar": "لماذا يحتاجه عملاؤنا؟",
+            "en": "Why our customers need it"
+          }
+        },
+        {
+          "id": "subtitle",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "الوصف",
+          "required": false,
+          "maxLength": 160,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "problem_title",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "عنوان المشكلة",
+          "required": false,
+          "maxLength": 40,
+          "value": {
+            "ar": "قبل",
+            "en": "Before"
+          }
+        },
+        {
+          "id": "problems",
+          "type": "collection",
+          "format": "collection",
+          "label": "نقاط المشكلة",
+          "item_label": "نقطة",
+          "required": true,
+          "minLength": 1,
+          "maxLength": 6,
+          "fields": [
+            {
+              "id": "text",
+              "type": "string",
+              "format": "text",
+              "label": "النص",
+              "required": true,
+              "maxLength": 140
+            }
+          ],
+          "value": [
+            {
+              "text": "تضيع وقتك في حلول مؤقتة لا تدوم"
+            },
+            {
+              "text": "نتائج غير واضحة رغم كثرة التجارب"
+            },
+            {
+              "text": "أسعار مرتفعة مقابل جودة متوسطة"
+            }
+          ]
+        },
+        {
+          "id": "solution_title",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "عنوان الحل",
+          "required": false,
+          "maxLength": 40,
+          "value": {
+            "ar": "بعد",
+            "en": "After"
+          }
+        },
+        {
+          "id": "solutions",
+          "type": "collection",
+          "format": "collection",
+          "label": "نقاط الحل",
+          "item_label": "نقطة",
+          "required": true,
+          "minLength": 1,
+          "maxLength": 6,
+          "fields": [
+            {
+              "id": "text",
+              "type": "string",
+              "format": "text",
+              "label": "النص",
+              "required": true,
+              "maxLength": 140
+            }
+          ],
+          "value": [
+            {
+              "text": "حل واحد متكامل يغنيك عن البدائل"
+            },
+            {
+              "text": "نتيجة ملحوظة من الاستخدام الأول"
+            },
+            {
+              "text": "جودة عالية بسعر عادل وضمان حقيقي"
+            }
+          ]
+        },
+        {
+          "id": "image",
+          "type": "string",
+          "format": "image",
+          "label": "صورة توضيحية (اختياري)",
+          "required": false
+        },
+        {
+          "id": "cta_label",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص الزر (اختياري)",
+          "required": false,
+          "maxLength": 30,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "cta_link",
+          "type": "string",
+          "format": "url",
+          "label": "رابط الزر",
+          "placeholder": "https://",
+          "required": false,
+          "description": "اتركه فارغاً ليفتح الزر لوحة منتجات العرض فوق الصفحة (أو ينتقل لقسم المنتجات حسب الإعداد التالي)."
+        },
+        {
+          "id": "cta_action",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "عند الضغط على زر بدون رابط",
+          "required": true,
+          "options": [
+            {
+              "label": "افتح لوحة منتجات العرض فوق الصفحة",
+              "value": "board",
+              "key": "board"
+            },
+            {
+              "label": "انتقل إلى قسم المنتجات",
+              "value": "scroll",
+              "key": "scroll"
+            }
+          ],
+          "selected": [
+            {
+              "label": "افتح لوحة منتجات العرض فوق الصفحة",
+              "value": "board",
+              "key": "board"
+            }
+          ],
+          "description": "لوحة المنتجات تعرض منتجات عنصر «منتجات الحملة» مع عرض سريع وإضافة للسلة."
+        },
+        {
+          "id": "tone",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "خلفية القسم",
+          "required": true,
+          "options": [
+            {
+              "label": "تلقائي (شفاف)",
+              "value": "auto",
+              "key": "auto"
+            },
+            {
+              "label": "لون فاتح من لون المتجر",
+              "value": "tint",
+              "key": "tint"
+            },
+            {
+              "label": "لون المتجر الأساسي",
+              "value": "primary",
+              "key": "primary"
+            },
+            {
+              "label": "داكن",
+              "value": "dark",
+              "key": "dark"
+            }
+          ],
+          "selected": [
+            {
+              "label": "تلقائي (شفاف)",
+              "value": "auto",
+              "key": "auto"
+            }
+          ]
+        },
+        {
+          "id": "accent_color",
+          "type": "string",
+          "format": "color",
+          "inputType": "color",
+          "label": "لون مخصص (اختياري)",
+          "required": false,
+          "description": "يستخدم لون متجرك تلقائياً. اختر لوناً هنا فقط إذا أردت لوناً مختلفاً لهذا القسم."
+        }
+      ]
+    },
+    {
+      "title": "موسم · المميزات",
+      "icon": "sicon-layout-grid-rearrange",
+      "name": "mawsim-benefits",
+      "key": "c0428c06-b008-5935-8e26-e6d8632066d4",
+      "image": "https://raw.githubusercontent.com/melsukkari/salla-snowfalls/master/docs/previews/mawsim-benefits.png",
+      "fields": [
+        {
+          "id": "eyebrow",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص صغير فوق العنوان",
+          "required": false,
+          "maxLength": 40,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "title",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "العنوان",
+          "required": false,
+          "maxLength": 80,
+          "value": {
+            "ar": "مميزات تفرق معك",
+            "en": "Benefits you will feel"
+          }
+        },
+        {
+          "id": "subtitle",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "الوصف",
+          "required": false,
+          "maxLength": 160,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "items",
+          "type": "collection",
+          "format": "collection",
+          "label": "المميزات",
+          "item_label": "ميزة",
+          "required": true,
+          "minLength": 1,
+          "maxLength": 12,
+          "fields": [
+            {
+              "id": "icon",
+              "type": "items",
+              "format": "dropdown-list",
+              "source": "Manual",
+              "label": "الأيقونة",
+              "required": true,
+              "options": [
+                {
+                  "label": "صح ✓",
+                  "value": "check",
+                  "key": "check"
+                },
+                {
+                  "label": "شحن",
+                  "value": "truck",
+                  "key": "truck"
+                },
+                {
+                  "label": "ضمان / حماية",
+                  "value": "shield",
+                  "key": "shield"
+                },
+                {
+                  "label": "دفع",
+                  "value": "card",
+                  "key": "card"
+                },
+                {
+                  "label": "استرجاع",
+                  "value": "return",
+                  "key": "return"
+                },
+                {
+                  "label": "نجمة",
+                  "value": "star",
+                  "key": "star"
+                },
+                {
+                  "label": "هدية",
+                  "value": "gift",
+                  "key": "gift"
+                },
+                {
+                  "label": "وقت",
+                  "value": "clock",
+                  "key": "clock"
+                },
+                {
+                  "label": "دعم / محادثة",
+                  "value": "chat",
+                  "key": "chat"
+                },
+                {
+                  "label": "تميّز",
+                  "value": "sparkle",
+                  "key": "sparkle"
+                },
+                {
+                  "label": "قلب",
+                  "value": "heart",
+                  "key": "heart"
+                },
+                {
+                  "label": "طبيعي",
+                  "value": "leaf",
+                  "key": "leaf"
+                },
+                {
+                  "label": "سرعة",
+                  "value": "bolt",
+                  "key": "bolt"
+                },
+                {
+                  "label": "جودة",
+                  "value": "medal",
+                  "key": "medal"
+                },
+                {
+                  "label": "هاتف",
+                  "value": "phone",
+                  "key": "phone"
+                },
+                {
+                  "label": "هلال",
+                  "value": "moon",
+                  "key": "moon"
+                },
+                {
+                  "label": "عرض / سعر",
+                  "value": "tag",
+                  "key": "tag"
+                }
+              ],
+              "selected": [
+                {
+                  "label": "صح ✓",
+                  "value": "check",
+                  "key": "check"
+                }
+              ]
+            },
+            {
+              "id": "title",
+              "type": "string",
+              "format": "text",
+              "label": "العنوان",
+              "required": true,
+              "maxLength": 60
+            },
+            {
+              "id": "text",
+              "type": "string",
+              "format": "textarea",
+              "label": "الوصف",
+              "required": false,
+              "maxLength": 180,
+              "rows": 3
+            }
+          ],
+          "value": [
+            {
+              "icon": [
+                {
+                  "label": "جودة",
+                  "value": "medal",
+                  "key": "medal"
+                }
+              ],
+              "title": "جودة مضمونة",
+              "text": "خامات مختارة واختبارات جودة قبل الشحن."
+            },
+            {
+              "icon": [
+                {
+                  "label": "سرعة",
+                  "value": "bolt",
+                  "key": "bolt"
+                }
+              ],
+              "title": "نتيجة سريعة",
+              "text": "تلاحظ الفرق من أول استخدام."
+            },
+            {
+              "icon": [
+                {
+                  "label": "طبيعي",
+                  "value": "leaf",
+                  "key": "leaf"
+                }
+              ],
+              "title": "مكونات آمنة",
+              "text": "مناسب للاستخدام اليومي لكل أفراد العائلة."
+            },
+            {
+              "icon": [
+                {
+                  "label": "شحن",
+                  "value": "truck",
+                  "key": "truck"
+                }
+              ],
+              "title": "شحن سريع",
+              "text": "توصيل خلال 1-3 أيام عمل."
+            }
+          ]
+        },
+        {
+          "id": "columns",
+          "type": "items",
+          "format": "radio-list",
+          "source": "Manual",
+          "label": "عدد الأعمدة",
+          "required": true,
+          "options": [
+            {
+              "label": "2",
+              "value": "2",
+              "key": "2"
+            },
+            {
+              "label": "3",
+              "value": "3",
+              "key": "3"
+            },
+            {
+              "label": "4",
+              "value": "4",
+              "key": "4"
+            }
+          ],
+          "selected": [
+            {
+              "label": "4",
+              "value": "4",
+              "key": "4"
+            }
+          ]
+        },
+        {
+          "id": "align",
+          "type": "items",
+          "format": "radio-list",
+          "source": "Manual",
+          "label": "محاذاة النص",
+          "required": true,
+          "options": [
+            {
+              "label": "بداية السطر",
+              "value": "start",
+              "key": "start"
+            },
+            {
+              "label": "وسط",
+              "value": "center",
+              "key": "center"
+            }
+          ],
+          "selected": [
+            {
+              "label": "وسط",
+              "value": "center",
+              "key": "center"
+            }
+          ]
+        },
+        {
+          "id": "tone",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "خلفية القسم",
+          "required": true,
+          "options": [
+            {
+              "label": "تلقائي (شفاف)",
+              "value": "auto",
+              "key": "auto"
+            },
+            {
+              "label": "لون فاتح من لون المتجر",
+              "value": "tint",
+              "key": "tint"
+            },
+            {
+              "label": "لون المتجر الأساسي",
+              "value": "primary",
+              "key": "primary"
+            },
+            {
+              "label": "داكن",
+              "value": "dark",
+              "key": "dark"
+            }
+          ],
+          "selected": [
+            {
+              "label": "تلقائي (شفاف)",
+              "value": "auto",
+              "key": "auto"
+            }
+          ]
+        },
+        {
+          "id": "accent_color",
+          "type": "string",
+          "format": "color",
+          "inputType": "color",
+          "label": "لون مخصص (اختياري)",
+          "required": false,
+          "description": "يستخدم لون متجرك تلقائياً. اختر لوناً هنا فقط إذا أردت لوناً مختلفاً لهذا القسم."
+        }
+      ]
+    },
+    {
+      "title": "موسم · منتجات الحملة",
+      "icon": "sicon-tag",
+      "name": "mawsim-product-spotlight",
+      "key": "3262a5a0-d478-50fe-8ec0-ee6589723dd7",
+      "image": "https://raw.githubusercontent.com/melsukkari/salla-snowfalls/master/docs/previews/mawsim-product-spotlight.png",
+      "fields": [
+        {
+          "id": "eyebrow",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص صغير فوق العنوان",
+          "required": false,
+          "maxLength": 40,
+          "value": {
+            "ar": "الأكثر طلباً",
+            "en": "Best sellers"
+          }
+        },
+        {
+          "id": "title",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "العنوان",
+          "required": false,
+          "maxLength": 80,
+          "value": {
+            "ar": "اختيارات الحملة",
+            "en": "Campaign picks"
+          }
+        },
+        {
+          "id": "subtitle",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "الوصف",
+          "required": false,
+          "maxLength": 160,
+          "value": {
+            "ar": "منتجات مختارة بأسعار خاصة لفترة محدودة",
+            "en": "Hand-picked products at special prices for a limited time"
+          }
+        },
+        {
+          "id": "products",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "products",
+          "label": "المنتجات",
+          "description": "اختر حتى 8 منتجات.",
+          "multichoice": true,
+          "searchable": true,
+          "required": true,
+          "maxLength": 8,
+          "options": [],
+          "selected": []
+        },
+        {
+          "id": "ribbon",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "شارة على كل منتج (اختياري)",
+          "required": false,
+          "maxLength": 24,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "show_add_to_cart",
+          "type": "boolean",
+          "format": "switch",
+          "label": "زر الإضافة للسلة",
+          "required": false,
+          "value": true,
+          "description": "المنتجات التي لها خيارات (مقاس/لون) تفتح العرض السريع ثم صفحة المنتج."
+        },
+        {
+          "id": "open_mode",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "عند الضغط على المنتج",
+          "required": true,
+          "options": [
+            {
+              "label": "عرض سريع في لوحة فوق الصفحة",
+              "value": "board",
+              "key": "board"
+            },
+            {
+              "label": "الانتقال لصفحة المنتج",
+              "value": "page",
+              "key": "page"
+            }
+          ],
+          "selected": [
+            {
+              "label": "عرض سريع في لوحة فوق الصفحة",
+              "value": "board",
+              "key": "board"
+            }
+          ]
+        },
+        {
+          "id": "board_title",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "عنوان لوحة المنتجات",
+          "required": false,
+          "maxLength": 60,
+          "value": {
+            "ar": "",
+            "en": ""
+          },
+          "description": "يُستخدم عنوان القسم إذا تُرك فارغاً."
+        },
+        {
+          "id": "board_subtitle",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "وصف لوحة المنتجات",
+          "required": false,
+          "maxLength": 120,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "board_scene",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "خلفية لوحة المنتجات المتحركة",
+          "required": true,
+          "options": [
+            {
+              "label": "بدون",
+              "value": "none",
+              "key": "none"
+            },
+            {
+              "label": "رمضان: فوانيس معلّقة وهلال ونجوم",
+              "value": "ramadan",
+              "key": "ramadan"
+            },
+            {
+              "label": "ثلج: كرات ثلج متساقطة",
+              "value": "snow",
+              "key": "snow"
+            },
+            {
+              "label": "رمضان + ثلج",
+              "value": "ramadan-snow",
+              "key": "ramadan-snow"
+            },
+            {
+              "label": "قصاصات احتفالية ملونة",
+              "value": "confetti",
+              "key": "confetti"
+            },
+            {
+              "label": "نجوم وأهلّة ذهبية متساقطة",
+              "value": "stars",
+              "key": "stars"
+            }
+          ],
+          "selected": [
+            {
+              "label": "قصاصات احتفالية ملونة",
+              "value": "confetti",
+              "key": "confetti"
+            }
+          ]
+        },
+        {
+          "id": "columns",
+          "type": "items",
+          "format": "radio-list",
+          "source": "Manual",
+          "label": "عدد الأعمدة على الشاشات الكبيرة",
+          "required": true,
+          "options": [
+            {
+              "label": "2",
+              "value": "2",
+              "key": "2"
+            },
+            {
+              "label": "3",
+              "value": "3",
+              "key": "3"
+            },
+            {
+              "label": "4",
+              "value": "4",
+              "key": "4"
+            }
+          ],
+          "selected": [
+            {
+              "label": "4",
+              "value": "4",
+              "key": "4"
+            }
+          ]
+        },
+        {
+          "id": "more_label",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "زر عرض المزيد (اختياري)",
+          "required": false,
+          "maxLength": 30,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "more_link",
+          "type": "string",
+          "format": "url",
+          "label": "رابط عرض المزيد",
+          "placeholder": "https://",
+          "required": false,
+          "description": "يظهر الزر فقط عند إضافة نص ورابط."
+        },
+        {
+          "id": "tone",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "خلفية القسم",
+          "required": true,
+          "options": [
+            {
+              "label": "تلقائي (شفاف)",
+              "value": "auto",
+              "key": "auto"
+            },
+            {
+              "label": "لون فاتح من لون المتجر",
+              "value": "tint",
+              "key": "tint"
+            },
+            {
+              "label": "لون المتجر الأساسي",
+              "value": "primary",
+              "key": "primary"
+            },
+            {
+              "label": "داكن",
+              "value": "dark",
+              "key": "dark"
+            }
+          ],
+          "selected": [
+            {
+              "label": "تلقائي (شفاف)",
+              "value": "auto",
+              "key": "auto"
+            }
+          ]
+        },
+        {
+          "id": "accent_color",
+          "type": "string",
+          "format": "color",
+          "inputType": "color",
+          "label": "لون مخصص (اختياري)",
+          "required": false,
+          "description": "يستخدم لون متجرك تلقائياً. اختر لوناً هنا فقط إذا أردت لوناً مختلفاً لهذا القسم."
+        }
+      ]
+    },
+    {
+      "title": "موسم · آراء العملاء",
+      "icon": "sicon-star",
+      "name": "mawsim-testimonials",
+      "key": "bbbc99e2-a857-559c-9cae-8428d2e74fa9",
+      "image": "https://raw.githubusercontent.com/melsukkari/salla-snowfalls/master/docs/previews/mawsim-testimonials.png",
+      "fields": [
+        {
+          "id": "eyebrow",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص صغير فوق العنوان",
+          "required": false,
+          "maxLength": 40,
+          "value": {
+            "ar": "آراء حقيقية",
+            "en": "Real reviews"
+          }
+        },
+        {
+          "id": "title",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "العنوان",
+          "required": false,
+          "maxLength": 80,
+          "value": {
+            "ar": "عملاؤنا جرّبوا وقالوا",
+            "en": "Our customers tried it"
+          }
+        },
+        {
+          "id": "subtitle",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "الوصف",
+          "required": false,
+          "maxLength": 160,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "show_summary",
+          "type": "boolean",
+          "format": "switch",
+          "label": "إظهار متوسط التقييم",
+          "required": false,
+          "value": true
+        },
+        {
+          "id": "summary_text",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص بجانب التقييم",
+          "required": false,
+          "maxLength": 50,
+          "value": {
+            "ar": "من تقييمات عملائنا",
+            "en": "from our customers' reviews"
+          }
+        },
+        {
+          "id": "items",
+          "type": "collection",
+          "format": "collection",
+          "label": "التقييمات",
+          "item_label": "تقييم",
+          "required": true,
+          "minLength": 1,
+          "maxLength": 12,
+          "fields": [
+            {
+              "id": "name",
+              "type": "string",
+              "format": "text",
+              "label": "اسم العميل",
+              "required": true,
+              "maxLength": 40
+            },
+            {
+              "id": "city",
+              "type": "string",
+              "format": "text",
+              "label": "المدينة (اختياري)",
+              "required": false,
+              "maxLength": 30
+            },
+            {
+              "id": "text",
+              "type": "string",
+              "format": "textarea",
+              "label": "نص التقييم",
+              "required": false,
+              "maxLength": 300,
+              "rows": 3
+            },
+            {
+              "id": "rating",
+              "type": "number",
+              "format": "slider",
+              "inputType": "range",
+              "label": "التقييم",
+              "required": false,
+              "minimum": 1,
+              "maximum": 5,
+              "step": 1,
+              "value": 5
+            },
+            {
+              "id": "avatar",
+              "type": "string",
+              "format": "image",
+              "label": "صورة العميل (اختياري)",
+              "required": false
+            }
+          ],
+          "value": [
+            {
+              "name": "نورة",
+              "city": "الرياض",
+              "text": "وصلني الطلب بسرعة والجودة أفضل مما توقعت. صار من مشترياتي الثابتة.",
+              "rating": 5
+            },
+            {
+              "name": "عبدالله",
+              "city": "جدة",
+              "text": "تعامل راقٍ وتغليف ممتاز، والمنتج نفس الوصف تماماً.",
+              "rating": 5
+            },
+            {
+              "name": "ريم",
+              "city": "الدمام",
+              "text": "جربته بعد تردد، والنتيجة فعلاً واضحة. أنصح فيه.",
+              "rating": 4
+            }
+          ]
+        },
+        {
+          "id": "tone",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "خلفية القسم",
+          "required": true,
+          "options": [
+            {
+              "label": "تلقائي (شفاف)",
+              "value": "auto",
+              "key": "auto"
+            },
+            {
+              "label": "لون فاتح من لون المتجر",
+              "value": "tint",
+              "key": "tint"
+            },
+            {
+              "label": "لون المتجر الأساسي",
+              "value": "primary",
+              "key": "primary"
+            },
+            {
+              "label": "داكن",
+              "value": "dark",
+              "key": "dark"
+            }
+          ],
+          "selected": [
+            {
+              "label": "لون فاتح من لون المتجر",
+              "value": "tint",
+              "key": "tint"
+            }
+          ]
+        },
+        {
+          "id": "accent_color",
+          "type": "string",
+          "format": "color",
+          "inputType": "color",
+          "label": "لون مخصص (اختياري)",
+          "required": false,
+          "description": "يستخدم لون متجرك تلقائياً. اختر لوناً هنا فقط إذا أردت لوناً مختلفاً لهذا القسم."
+        }
+      ]
+    },
+    {
+      "title": "موسم · جدول المقارنة",
+      "icon": "sicon-paragraph",
+      "name": "mawsim-comparison",
+      "key": "f4538c7f-db10-5d75-9dff-3ef7b8dad221",
+      "image": "https://raw.githubusercontent.com/melsukkari/salla-snowfalls/master/docs/previews/mawsim-comparison.png",
+      "fields": [
+        {
+          "id": "eyebrow",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص صغير فوق العنوان",
+          "required": false,
+          "maxLength": 40,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "title",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "العنوان",
+          "required": false,
+          "maxLength": 80,
+          "value": {
+            "ar": "ليش تختارنا؟",
+            "en": "Why choose us?"
+          }
+        },
+        {
+          "id": "subtitle",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "الوصف",
+          "required": false,
+          "maxLength": 160,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "us_label",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "عنوان عمودك",
+          "required": false,
+          "maxLength": 24,
+          "value": {
+            "ar": "متجرنا",
+            "en": "Us"
+          }
+        },
+        {
+          "id": "them_label",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "عنوان عمود المقارنة",
+          "required": false,
+          "maxLength": 24,
+          "value": {
+            "ar": "البدائل الأخرى",
+            "en": "Others"
+          }
+        },
+        {
+          "id": "rows",
+          "type": "collection",
+          "format": "collection",
+          "label": "صفوف المقارنة",
+          "item_label": "صف",
+          "required": true,
+          "minLength": 1,
+          "maxLength": 12,
+          "fields": [
+            {
+              "id": "feature",
+              "type": "string",
+              "format": "text",
+              "label": "الميزة",
+              "required": true,
+              "maxLength": 80
+            },
+            {
+              "id": "us",
+              "type": "boolean",
+              "format": "switch",
+              "label": "متوفرة لدينا",
+              "required": false,
+              "value": true
+            },
+            {
+              "id": "them",
+              "type": "boolean",
+              "format": "switch",
+              "label": "متوفرة لدى الآخرين",
+              "required": false,
+              "value": false
+            }
+          ],
+          "value": [
+            {
+              "feature": "ضمان استبدال حقيقي",
+              "us": true,
+              "them": false
+            },
+            {
+              "feature": "شحن خلال 1-3 أيام",
+              "us": true,
+              "them": false
+            },
+            {
+              "feature": "دفع عند الاستلام وتقسيط",
+              "us": true,
+              "them": true
+            },
+            {
+              "feature": "دعم مباشر عبر واتساب",
+              "us": true,
+              "them": false
+            }
+          ]
+        },
+        {
+          "id": "cta_label",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص الزر (اختياري)",
+          "required": false,
+          "maxLength": 30,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "cta_link",
+          "type": "string",
+          "format": "url",
+          "label": "رابط الزر",
+          "placeholder": "https://",
+          "required": false,
+          "description": "اتركه فارغاً ليفتح الزر لوحة منتجات العرض فوق الصفحة (أو ينتقل لقسم المنتجات حسب الإعداد التالي)."
+        },
+        {
+          "id": "cta_action",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "عند الضغط على زر بدون رابط",
+          "required": true,
+          "options": [
+            {
+              "label": "افتح لوحة منتجات العرض فوق الصفحة",
+              "value": "board",
+              "key": "board"
+            },
+            {
+              "label": "انتقل إلى قسم المنتجات",
+              "value": "scroll",
+              "key": "scroll"
+            }
+          ],
+          "selected": [
+            {
+              "label": "افتح لوحة منتجات العرض فوق الصفحة",
+              "value": "board",
+              "key": "board"
+            }
+          ],
+          "description": "لوحة المنتجات تعرض منتجات عنصر «منتجات الحملة» مع عرض سريع وإضافة للسلة."
+        },
+        {
+          "id": "tone",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "خلفية القسم",
+          "required": true,
+          "options": [
+            {
+              "label": "تلقائي (شفاف)",
+              "value": "auto",
+              "key": "auto"
+            },
+            {
+              "label": "لون فاتح من لون المتجر",
+              "value": "tint",
+              "key": "tint"
+            },
+            {
+              "label": "لون المتجر الأساسي",
+              "value": "primary",
+              "key": "primary"
+            },
+            {
+              "label": "داكن",
+              "value": "dark",
+              "key": "dark"
+            }
+          ],
+          "selected": [
+            {
+              "label": "تلقائي (شفاف)",
+              "value": "auto",
+              "key": "auto"
+            }
+          ]
+        },
+        {
+          "id": "accent_color",
+          "type": "string",
+          "format": "color",
+          "inputType": "color",
+          "label": "لون مخصص (اختياري)",
+          "required": false,
+          "description": "يستخدم لون متجرك تلقائياً. اختر لوناً هنا فقط إذا أردت لوناً مختلفاً لهذا القسم."
+        }
+      ]
+    },
+    {
+      "title": "موسم · الأسئلة الشائعة",
+      "icon": "sicon-mail",
+      "name": "mawsim-faq",
+      "key": "3dad69c2-cb89-5514-b01d-3dbf7d8b96ca",
+      "image": "https://raw.githubusercontent.com/melsukkari/salla-snowfalls/master/docs/previews/mawsim-faq.png",
+      "fields": [
+        {
+          "id": "eyebrow",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص صغير فوق العنوان",
+          "required": false,
+          "maxLength": 40,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "title",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "العنوان",
+          "required": false,
+          "maxLength": 80,
+          "value": {
+            "ar": "أسئلة متكررة",
+            "en": "Frequently asked questions"
+          }
+        },
+        {
+          "id": "subtitle",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "الوصف",
+          "required": false,
+          "maxLength": 160,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "items",
+          "type": "collection",
+          "format": "collection",
+          "label": "الأسئلة",
+          "item_label": "سؤال",
+          "required": true,
+          "minLength": 1,
+          "maxLength": 20,
+          "fields": [
+            {
+              "id": "question",
+              "type": "string",
+              "format": "text",
+              "label": "السؤال",
+              "required": true,
+              "maxLength": 140
+            },
+            {
+              "id": "answer",
+              "type": "string",
+              "format": "textarea",
+              "label": "الإجابة",
+              "required": false,
+              "maxLength": 800,
+              "rows": 3
+            }
+          ],
+          "value": [
+            {
+              "question": "كم يستغرق التوصيل؟",
+              "answer": "من 1 إلى 3 أيام عمل داخل المدن الرئيسية، ومن 3 إلى 5 أيام لباقي المناطق."
+            },
+            {
+              "question": "هل يمكنني الاسترجاع أو الاستبدال؟",
+              "answer": "نعم، خلال 7 أيام من الاستلام بشرط أن يكون المنتج بحالته الأصلية."
+            },
+            {
+              "question": "ما طرق الدفع المتاحة؟",
+              "answer": "مدى، فيزا، ماستركارد، Apple Pay، والتقسيط عبر تابي وتمارا، والدفع عند الاستلام."
+            }
+          ]
+        },
+        {
+          "id": "open_first",
+          "type": "boolean",
+          "format": "switch",
+          "label": "فتح أول سؤال تلقائياً",
+          "required": false,
+          "value": true
+        },
+        {
+          "id": "single_open",
+          "type": "boolean",
+          "format": "switch",
+          "label": "فتح سؤال واحد فقط في كل مرة",
+          "required": false,
+          "value": true
+        },
+        {
+          "id": "contact_text",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص التواصل أسفل الأسئلة",
+          "required": false,
+          "maxLength": 80,
+          "value": {
+            "ar": "ما لقيت إجابتك؟",
+            "en": "Didn't find your answer?"
+          }
+        },
+        {
+          "id": "contact_label",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص زر التواصل",
+          "required": false,
+          "maxLength": 30,
+          "value": {
+            "ar": "تواصل معنا",
+            "en": "Contact us"
+          }
+        },
+        {
+          "id": "contact_link",
+          "type": "string",
+          "format": "url",
+          "label": "رابط التواصل",
+          "placeholder": "https://",
+          "required": false,
+          "description": "مثال: رابط واتساب https://wa.me/9665XXXXXXXX"
+        },
+        {
+          "id": "tone",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "خلفية القسم",
+          "required": true,
+          "options": [
+            {
+              "label": "تلقائي (شفاف)",
+              "value": "auto",
+              "key": "auto"
+            },
+            {
+              "label": "لون فاتح من لون المتجر",
+              "value": "tint",
+              "key": "tint"
+            },
+            {
+              "label": "لون المتجر الأساسي",
+              "value": "primary",
+              "key": "primary"
+            },
+            {
+              "label": "داكن",
+              "value": "dark",
+              "key": "dark"
+            }
+          ],
+          "selected": [
+            {
+              "label": "تلقائي (شفاف)",
+              "value": "auto",
+              "key": "auto"
+            }
+          ]
+        },
+        {
+          "id": "accent_color",
+          "type": "string",
+          "format": "color",
+          "inputType": "color",
+          "label": "لون مخصص (اختياري)",
+          "required": false,
+          "description": "يستخدم لون متجرك تلقائياً. اختر لوناً هنا فقط إذا أردت لوناً مختلفاً لهذا القسم."
+        }
+      ]
+    },
+    {
+      "title": "موسم · الدعوة النهائية والشريط الثابت",
+      "icon": "sicon-link",
+      "name": "mawsim-sticky-cta",
+      "key": "78969a59-d362-579e-98b7-67a381fdf286",
+      "image": "https://raw.githubusercontent.com/melsukkari/salla-snowfalls/master/docs/previews/mawsim-sticky-cta.png",
+      "fields": [
+        {
+          "id": "eyebrow",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص صغير فوق العنوان",
+          "required": false,
+          "maxLength": 40,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "title",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "العنوان",
+          "required": true,
+          "maxLength": 80,
+          "value": {
+            "ar": "جاهز تبدأ؟",
+            "en": "Ready to start?"
+          }
+        },
+        {
+          "id": "subtitle",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "الوصف",
+          "required": false,
+          "maxLength": 180,
+          "value": {
+            "ar": "اطلب الآن واستلم خلال أيام — الكمية محدودة.",
+            "en": "Order now and receive it within days — limited stock."
+          }
+        },
+        {
+          "id": "cta_label",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص الزر",
+          "required": false,
+          "maxLength": 30,
+          "value": {
+            "ar": "اطلب الآن",
+            "en": "Order now"
+          }
+        },
+        {
+          "id": "cta_link",
+          "type": "string",
+          "format": "url",
+          "label": "رابط الزر",
+          "placeholder": "https://",
+          "required": false,
+          "description": "اتركه فارغاً ليفتح الزر لوحة منتجات العرض فوق الصفحة (أو ينتقل لقسم المنتجات حسب الإعداد التالي)."
+        },
+        {
+          "id": "cta_action",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "عند الضغط على زر بدون رابط",
+          "required": true,
+          "options": [
+            {
+              "label": "افتح لوحة منتجات العرض فوق الصفحة",
+              "value": "board",
+              "key": "board"
+            },
+            {
+              "label": "انتقل إلى قسم المنتجات",
+              "value": "scroll",
+              "key": "scroll"
+            }
+          ],
+          "selected": [
+            {
+              "label": "افتح لوحة منتجات العرض فوق الصفحة",
+              "value": "board",
+              "key": "board"
+            }
+          ],
+          "description": "لوحة المنتجات تعرض منتجات عنصر «منتجات الحملة» مع عرض سريع وإضافة للسلة."
+        },
+        {
+          "id": "note",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "ملاحظة أسفل الزر",
+          "required": false,
+          "maxLength": 80,
+          "value": {
+            "ar": "",
+            "en": ""
+          }
+        },
+        {
+          "id": "mode",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "طريقة العرض",
+          "required": true,
+          "options": [
+            {
+              "label": "قسم ختامي + شريط ثابت",
+              "value": "both",
+              "key": "both"
+            },
+            {
+              "label": "القسم الختامي فقط",
+              "value": "banner",
+              "key": "banner"
+            },
+            {
+              "label": "الشريط الثابت فقط",
+              "value": "bar",
+              "key": "bar"
+            }
+          ],
+          "selected": [
+            {
+              "label": "قسم ختامي + شريط ثابت",
+              "value": "both",
+              "key": "both"
+            }
+          ]
+        },
+        {
+          "id": "sticky_bar",
+          "type": "boolean",
+          "format": "switch",
+          "label": "تفعيل الشريط الثابت أسفل الشاشة",
+          "required": false,
+          "value": true
+        },
+        {
+          "id": "bar_text",
+          "type": "string",
+          "format": "text",
+          "multilanguage": true,
+          "label": "نص الشريط الثابت",
+          "required": false,
+          "maxLength": 60,
+          "value": {
+            "ar": "العرض لفترة محدودة",
+            "en": "Limited-time offer"
+          }
+        },
+        {
+          "id": "show_after",
+          "type": "number",
+          "format": "slider",
+          "inputType": "range",
+          "label": "يظهر الشريط بعد التمرير (بكسل)",
+          "required": false,
+          "minimum": 0,
+          "maximum": 2000,
+          "step": 100,
+          "value": 600
+        },
+        {
+          "id": "dismissible",
+          "type": "boolean",
+          "format": "switch",
+          "label": "السماح بإغلاق الشريط",
+          "required": false,
+          "value": true
+        },
+        {
+          "id": "tone",
+          "type": "items",
+          "format": "dropdown-list",
+          "source": "Manual",
+          "label": "خلفية القسم",
+          "required": true,
+          "options": [
+            {
+              "label": "تلقائي (شفاف)",
+              "value": "auto",
+              "key": "auto"
+            },
+            {
+              "label": "لون فاتح من لون المتجر",
+              "value": "tint",
+              "key": "tint"
+            },
+            {
+              "label": "لون المتجر الأساسي",
+              "value": "primary",
+              "key": "primary"
+            },
+            {
+              "label": "داكن",
+              "value": "dark",
+              "key": "dark"
+            }
+          ],
+          "selected": [
+            {
+              "label": "لون المتجر الأساسي",
+              "value": "primary",
+              "key": "primary"
+            }
+          ]
+        },
+        {
+          "id": "accent_color",
+          "type": "string",
+          "format": "color",
+          "inputType": "color",
+          "label": "لون مخصص (اختياري)",
+          "required": false,
+          "description": "يستخدم لون متجرك تلقائياً. اختر لوناً هنا فقط إذا أردت لوناً مختلفاً لهذا القسم."
+        }
+      ]
+    }
+  ]
+}
